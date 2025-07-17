@@ -1,5 +1,7 @@
 # 📚 Book-Nagar
 
+**Live-site** https://boi-nagar.web.app/
+
 **Book-Nagar** is a full-stack web application to explore, manage, and discover books. This repository contains both the frontend built using **Vite + React** and the backend application.
 
 ---
