@@ -1,52 +1,41 @@
-import viteLogo from './assets/banner.jpg';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './firebase'; // Ensure you have firebase initialize
+import { clearUser, setUser } from './store/AuthSlice';
+import AppRoutes from './routes/AppRoutes';
 import './App.css';
 
 function App() {
-	return (
-		<>
-			<div>
-				<h1>Welcome to Boi Nagar.</h1>
-				<img src={viteLogo} style={{ width: '100%', maxHeight: '60vh', borderRadius: '2rem' }} alt="Vite logo" />
-				<h1>Let's read books!</h1>
-			</div>
-			<div>
-<hr class="dashed"></hr>
-				<h1>This is an university Project by</h1>
-				<h1>Team Ultron </h1>
+	const dispatch = useDispatch();
+	const { user, loading } = useSelector((state) => state.auth);
 
-			</div>
+	console.log(user, loading);
 
-			<h1>Ultron Members</h1>
+	useEffect(() => {
+		const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+			console.log(firebaseUser);
+			if (firebaseUser) {
+				dispatch(
+					setUser({
+						uid: firebaseUser.uid,
+						email: firebaseUser.email,
+						displayName: firebaseUser.displayName,
+						photoURL: firebaseUser.photoURL,
+					})
+				);
+			} else {
+				console.log('User is signed out');
+				dispatch(clearUser());
+			}
+		});
 
-<table id="members">
-  <tr>
-    <th>Name</th>
-    <th>ID</th>
-  </tr>
-  <tr>
-    <td>Md Sanaullah</td>
-    <td>221-15-4995</td>
+		return () => unsubscribe();
+	}, [dispatch]);
 
-  </tr>
-  <tr>
-    <td>Md Zahid Hasan Patwary</td>
-    <td>221-15-4996</td>
-  </tr>
-  <tr>
-    <td>Md Amran Haque</td>
-    <td>221-15-5662</td>
-  </tr>
-  <tr>
-    <td>Md Tahsinul Haque</td>
-    <td>221-15-4661</td>
-  </tr>
-  <tr>
-    <td>Md Shakibul Islam</td>
-    <td>221-15-5551</td>
-  </tr>
-</table>
-		</>
-	);
+	if (loading) return <p>Loading auth...</p>;
+
+	return <AppRoutes />;
 }
 
 export default App;
