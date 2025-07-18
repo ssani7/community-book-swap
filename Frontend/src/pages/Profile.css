@@ -142,3 +142,24 @@ th {
   background-color: #d9edf7;
   color: #31708f;
 }
+
+.search-section {
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.search-book-link {
+  background: none;
+  border: none;
+  color: #4a90e2;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: underline;
+  transition: color 0.3s;
+}
+
+.search-book-link:hover {
+  color: #357abd;
+}

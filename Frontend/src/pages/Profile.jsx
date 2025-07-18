@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./Profile.css";
+import BookDetails from './BookDetails'; 
 import { getAuth } from "firebase/auth";
 
 const Profile = () => {
@@ -20,6 +21,8 @@ const Profile = () => {
   const [phone, setPhone] = useState(() => {
     return localStorage.getItem("userPhone") || "+8801XXXXXXXXX";
   });
+
+  const [showSearch, setShowSearch] = useState(false); // 👈 Toggle for BookDetails
 
   const [books] = useState([
     {
@@ -48,6 +51,11 @@ const Profile = () => {
     localStorage.setItem("userPhone", phone); 
     setEditMode(false);
   };
+
+  // 🔁 Show BookDetails component if toggled
+  if (showSearch) {
+    return <BookDetails onBack={() => setShowSearch(false)} />;
+  }
 
   return (
     <div className="profile-container">
@@ -81,6 +89,15 @@ const Profile = () => {
             </div>
           </div>
         )}
+      </div>
+
+      <div className="search-section">
+        <button
+          onClick={() => setShowSearch(true)}
+          className="search-book-link"
+        >
+          🔍 Search New Book
+        </button>
       </div>
 
       <div className="tab-buttons">
@@ -131,5 +148,4 @@ const Profile = () => {
     </div>
   );
 };
-
 export default Profile;
