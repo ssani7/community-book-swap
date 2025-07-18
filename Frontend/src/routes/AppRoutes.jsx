@@ -5,6 +5,7 @@ import MainLayout from '../layouts/MainLayout';
 import Home from '../pages/Home';
 import SignIn from '../pages/SignIn';
 import SignUp from '../pages/SignUp';
+import Profile from '../pages/Profile';	
 import ProtectedRoute from './ProtectedRoute';
 
 export default function AppRoutes() {
@@ -13,7 +14,9 @@ export default function AppRoutes() {
 			<Route element={<MainLayout />}>
 				{/* Protected Routes */}
 				<Route element={<ProtectedRoute />}>
-					<Route path="/" element={<Home />} />
+					<Route path="/" element={<Home/>} />
+					<Route path="/profile" element={<Profile />} />
+					{/* Add more protected routes here */}	
 				</Route>
 
 				{/* Public Routes */}
