@@ -16,7 +16,7 @@ const Profile = () => {
   const [editMode, setEditMode] = useState(false);
   const [tab, setTab] = useState("books");
 
-  // 🧠 Phone number saved in localStorage
+  // 🧠 Phone number saved in localStorage when anyone edit
   const [phone, setPhone] = useState(() => {
     return localStorage.getItem("userPhone") || "+8801XXXXXXXXX";
   });
@@ -45,7 +45,7 @@ const Profile = () => {
   const bookRequests = books.slice(0, 2);
 
   const handleSave = () => {
-    localStorage.setItem("userPhone", phone); // 🟢 Save to localStorage
+    localStorage.setItem("userPhone", phone); 
     setEditMode(false);
   };
 
