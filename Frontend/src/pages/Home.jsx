@@ -1,6 +1,27 @@
+import { useEffect, useState } from 'react';
 import viteLogo from '../assets/banner.jpg';
 
 const Home = () => {
+	const [books, setBooks] = useState([]);
+
+	useEffect(() => {
+		async function fetchUser() {
+			try {
+				const response = await fetch('http://localhost:8000/api/books');
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				const data = await response.json();
+				setBooks(data);
+			} catch (error) {
+				console.error('Error fetching user:', error);
+			}
+		}
+
+		fetchUser();
+	}, []);
+
+	console.log(books);
 	return (
 		<>
 			<div>
