@@ -1,7 +1,7 @@
 import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 const Navbar = () => {
@@ -15,34 +15,40 @@ const Navbar = () => {
 	};
 
 	return (
-		<div className="navbar bg-base-100 shadow-lg">
-			<div className="flex-1">
-				<a className="btn btn-ghost text-xl cursor-pointer" onClick={() => navigate('/')}>
+		<div className="navbar bg-base-100 shadow-lg justify-between">
+			<div className="">
+				<a className="text-xl font-bold px-5 cursor-pointer font-sans" onClick={() => navigate('/')}>
 					Boi Nagar
 				</a>
 			</div>
 
 			<div className="flex gap-2">
 				<div className="dropdown dropdown-end" onClick={() => setOpen(!open)}>
-					{user && (
+					{user?.uid ? (
 						<div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
 							<div className="w-10 rounded-full">
 								<img alt="User avatar" src={user.photoURL || 'https://i.pravatar.cc/150?u=user'} />
 							</div>
 						</div>
+					) : (
+						<Link to="/signin">
+							<div className="btn btn-primary">Log In</div>
+						</Link>
 					)}
 
-					<ul tabIndex={0} className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-32 p-2 text-2xl shadow">
-						<li>
-							<a onClick={() => navigate('/profile')}>Profile</a>
-						</li>
-						<li>
-							<a onClick={() => navigate('/books')}>Books</a>
-						</li>
-						<li>
-							<a onClick={handleLogout}>Logout</a>
-						</li>
-					</ul>
+					{user?.uid && (
+						<ul tabIndex={0} className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-32 p-2 text-2xl shadow">
+							<li>
+								<a onClick={() => navigate('/profile')}>Profile</a>
+							</li>
+							<li>
+								<a onClick={() => navigate('/books')}>Books</a>
+							</li>
+							<li>
+								<a onClick={handleLogout}>Logout</a>
+							</li>
+						</ul>
+					)}
 				</div>
 			</div>
 		</div>
