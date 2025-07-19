@@ -3,11 +3,11 @@ import { Routes, Route } from 'react-router-dom';
 import MainLayout from '../layouts/MainLayout';
 
 import Home from '../pages/Home';
-import SignIn from '../pages/SignIn';
-import SignUp from '../pages/SignUp';
 import Profile from '../pages/Profile';
 import ProtectedRoute from './ProtectedRoute';
 import BookDetails from '../pages/BookDetails';
+import SignUp from '../pages/v1/SignUp';
+import SignIn from '../pages/v1/SignIn';
 
 export default function AppRoutes() {
 	return (
@@ -15,13 +15,13 @@ export default function AppRoutes() {
 			<Route element={<MainLayout />}>
 				{/* Protected Routes */}
 				<Route element={<ProtectedRoute />}>
-					<Route path="/" element={<Home />} />
 					<Route path="/profile" element={<Profile />} />
 					<Route path="/books" element={<BookDetails />} />
 					{/* Add more protected routes here */}
 				</Route>
 
 				{/* Public Routes */}
+				<Route path="/" element={<Home />} />
 				<Route path="/signin" element={<SignIn />} />
 				<Route path="/signup" element={<SignUp />} />
 

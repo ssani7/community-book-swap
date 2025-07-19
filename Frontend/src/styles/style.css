@@ -1,0 +1,143 @@
+.container {
+	display: flex;
+	flex-wrap: wrap;
+	background: white;
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+	border-radius: 25px;
+	overflow: hidden;
+	max-width: 80vw;
+	width: 100%;
+	animation: fadeIn 1s ease;
+	margin: 5rem auto;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.left {
+	flex: 1;
+	background-size: cover;
+	background-position: center;
+	min-height: 400px;
+}
+
+.signup-img {
+	background-image: url('../assets/images/book1.jpeg');
+}
+
+.signin-img {
+	background-image: url('../assets/images/book2.jpeg');
+}
+
+.right {
+	flex: 1;
+	padding: 40px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.right h2 {
+	color: #2c3e50;
+	margin-bottom: 10px;
+	font-size: 28px;
+}
+
+.right p {
+	margin-bottom: 30px;
+	/* color: #555; */
+}
+
+input {
+	width: 100%;
+	padding: 12px;
+	margin-bottom: 20px;
+	border: 1px solid #ccc;
+	border-radius: 8px;
+	transition: all 0.3s;
+}
+
+input:focus {
+	border-color: #3498db;
+	outline: none;
+	box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+}
+
+.actions {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 20px;
+	font-size: 14px;
+}
+
+.actions a {
+	color: #3498db;
+	text-decoration: none;
+}
+
+/* ✅ Full-width Buttons */
+.full-width-btn {
+	width: 100%;
+	background: #2ecc71;
+	color: white;
+	padding: 12px;
+	font-size: 16px;
+	border: none;
+	border-radius: 8px;
+	margin-top: 10px;
+	cursor: pointer;
+	transition: background 0.3s ease;
+}
+
+.full-width-btn:hover {
+	background: #27ae60;
+}
+
+/* ✅ Sign Up or Back Buttons */
+.signup-btn {
+	margin-top: 15px;
+	background: #3498db;
+	color: white;
+	padding: 10px 16px;
+	border: none;
+	border-radius: 8px;
+	font-size: 15px;
+	cursor: pointer;
+	transition: background 0.3s ease;
+}
+
+.signup-btn:hover {
+	background: #2980b9;
+}
+
+.signup {
+	margin-top: 20px;
+	text-align: center;
+	font-size: 14px;
+}
+
+.signup a {
+	text-decoration: none;
+}
+
+@media (max-width: 768px) {
+	.container {
+		flex-direction: column;
+	}
+
+	.left {
+		height: 250px;
+	}
+
+	.right {
+		padding: 30px 20px;
+	}
+}
