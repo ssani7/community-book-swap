@@ -3,6 +3,7 @@ import { auth } from '../../firebase';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import defultUser from '../../assets/images/no-user.png';
 
 const Navbar = () => {
 	const [open, setOpen] = useState(false);
@@ -27,7 +28,7 @@ const Navbar = () => {
 					{user?.uid ? (
 						<div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
 							<div className="w-10 rounded-full">
-								<img alt="User avatar" src={user.photoURL || 'https://i.pravatar.cc/150?u=user'} />
+								<img alt="User avatar" src={user.photoURL || defultUser} />
 							</div>
 						</div>
 					) : (

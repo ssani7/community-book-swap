@@ -12,8 +12,16 @@ export default function SignUp() {
 	const handleSignUp = async (e) => {
 		e.preventDefault();
 		try {
-			await createUserWithEmailAndPassword(auth, email, password);
-			navigate('/');
+			// await createUserWithEmailAndPassword(auth, email, password);
+			const resp = await fetch(`${import.meta.env.VITE_SOME_KEY}/api/signup`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ email, password }),
+			});
+			console.log(resp);
+			// navigate('/');
 		} catch (err) {
 			setError(err.message);
 		}
