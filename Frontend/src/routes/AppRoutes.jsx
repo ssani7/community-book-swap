@@ -8,7 +8,6 @@ import ProtectedRoute from './ProtectedRoute';
 import BookDetails from '../pages/BookDetails';
 import SignUp from '../pages/v1/SignUp';
 import SignIn from '../pages/v1/SignIn';
-import ManagementLayout from '../layouts/ManagementLayout';
 
 export default function AppRoutes() {
 	return (
@@ -28,10 +27,6 @@ export default function AppRoutes() {
 
 				{/* 404 Fallback */}
 				<Route path="*" element={<h1 className="text-center mt-10">404 - Page Not Found</h1>} />
-			</Route>
-			<Route element={<ManagementLayout />}>
-				<Route path="/my-books" element={<BookDetails />} />
-				<Route path="/book-requests" element={<Home />} />
 			</Route>
 		</Routes>
 	);

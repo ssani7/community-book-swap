@@ -5,8 +5,6 @@ import { auth } from './firebase'; // Ensure you have firebase initialize
 import { clearUser, setUser } from './store/AuthSlice';
 import AppRoutes from './routes/AppRoutes';
 import './App.css';
-import '../src/styles/style.css';
-import '../src/styles/BookDetails.css';
 
 function App() {
 	const dispatch = useDispatch();
