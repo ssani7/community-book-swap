@@ -16,7 +16,7 @@ const Navbar = () => {
 	};
 
 	return (
-		<div className="navbar bg-base-100 shadow-lg justify-between">
+		<div className="navbar bg-base-100 shadow-sm justify-between fixed z-50">
 			<div className="">
 				<a className="text-xl font-bold px-5 cursor-pointer font-sans" onClick={() => navigate('/')}>
 					Boi Nagar
@@ -43,7 +43,7 @@ const Navbar = () => {
 								<a onClick={() => navigate('/profile')}>Profile</a>
 							</li>
 							<li>
-								<a onClick={() => navigate('/books')}>Books</a>
+								<a onClick={() => navigate('/my-books')}>My Books</a>
 							</li>
 							<li>
 								<a onClick={handleLogout}>Logout</a>
