@@ -3,6 +3,7 @@ import { auth } from '../../firebase';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import defultUser from '../../assets/images/no-user.png';
 
 const Navbar = () => {
 	const [open, setOpen] = useState(false);
@@ -15,7 +16,7 @@ const Navbar = () => {
 	};
 
 	return (
-		<div className="navbar bg-base-100 shadow-lg justify-between">
+		<div className="navbar bg-base-100 shadow-sm justify-between fixed z-50">
 			<div className="">
 				<a className="text-xl font-bold px-5 cursor-pointer font-sans" onClick={() => navigate('/')}>
 					Boi Nagar
@@ -27,7 +28,7 @@ const Navbar = () => {
 					{user?.uid ? (
 						<div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
 							<div className="w-10 rounded-full">
-								<img alt="User avatar" src={user.photoURL || 'https://i.pravatar.cc/150?u=user'} />
+								<img alt="User avatar" src={user.photoURL || defultUser} />
 							</div>
 						</div>
 					) : (
@@ -42,7 +43,7 @@ const Navbar = () => {
 								<a onClick={() => navigate('/profile')}>Profile</a>
 							</li>
 							<li>
-								<a onClick={() => navigate('/books')}>Books</a>
+								<a onClick={() => navigate('/my-books')}>My Books</a>
 							</li>
 							<li>
 								<a onClick={handleLogout}>Logout</a>

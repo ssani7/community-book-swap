@@ -26,8 +26,16 @@ const SignUp = () => {
 		}
 		setLoading(true);
 		try {
-			await createUserWithEmailAndPassword(auth, email, password);
-			navigate('/');
+			// await createUserWithEmailAndPassword(auth, email, password);
+			// navigate('/');
+			const resp = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/signup`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ email, password, phone, name }),
+			});
+			console.log(resp);
 		} catch (err) {
 			setError(err.message);
 		} finally {
