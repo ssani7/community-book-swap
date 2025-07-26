@@ -1,14 +1,14 @@
 import React from 'react';
-import { ArrowRightCircle, RefreshCw, Heart, Share2 } from 'lucide-react';
-import { featuredBooks, categories } from '../../utils/Books';
+import { featuredBooks } from '../../utils/Books';
 import { useParams, Link } from 'react-router-dom';
+import BookCard from '../../components/public/BookCard';
 
 export default function BookDetailsPage() {
 	const { id } = useParams();
 	const book = featuredBooks.find((b) => b.bookId === id);
 	if (!book) return <div>Book not found</div>;
 
-	const { cover, title, author, publisher, publishYear, edition, condition, owner, description } = book;
+	const { description } = book;
 
 	const relatedBooks = featuredBooks.filter((_, idx) => String(idx) !== id);
 
@@ -18,63 +18,7 @@ export default function BookDetailsPage() {
 			<div className="flex flex-col xl:flex-row gap-6 mx-auto w-fit">
 				{/* Book card */}
 				<div className="flex flex-col ">
-					<div className="bg-base-100 rounded-lg shadow-lg p-6 flex flex-col md:flex-row h-fit">
-						<div className="flex-shrink-0">
-							<img src={cover} alt={title} className="w-full max-h-[50vh] object-contain mb-4 md:mb-0" />
-						</div>
-						<div className="text-left pl-0 md:pl-8 flex flex-col">
-							<div>
-								<h1 className="text-3xl font-bold text-primary mb-2">{title}</h1>
-								<p className="text-lg mb-1">
-									<strong>Author:</strong> {author}
-								</p>
-								{publisher && (
-									<p className="text-sm mb-1">
-										<strong>Publisher:</strong> {publisher}
-									</p>
-								)}
-								<p className="text-sm mb-1">
-									<strong>Year:</strong> {publishYear}
-								</p>
-								<p className="text-sm mb-1">
-									<strong>Edition:</strong> {edition}
-								</p>
-								<p className="text-sm mb-1">
-									<strong>Condition:</strong> {condition}
-								</p>
-								<p className="text-sm mb-1">
-									<strong>Owner:</strong> {owner}
-								</p>
-								<div className="w-fit my-4">
-									<ul className="flex flex-wrap gap-3">
-										{categories.map((cat) => (
-											<li key={cat.cid} className="badge badge-outline badge-lg text-sm">
-												{cat.name}
-											</li>
-										))}
-									</ul>
-								</div>
-							</div>
-							<div className="mt-5 flex flex-wrap lg:flex-nowrap gap-2">
-								<button className="btn btn-primary flex items-center space-x-2">
-									<ArrowRightCircle className="w-5 h-5" />
-									<span>Lend</span>
-								</button>
-								<button className="btn btn-secondary flex items-center space-x-2">
-									<RefreshCw className="w-5 h-5" />
-									<span>Swap</span>
-								</button>
-								<button className="btn btn-outline flex items-center space-x-2">
-									<Share2 className="w-5 h-5" />
-									<span>Share</span>
-								</button>
-								<button className="btn btn-ghost flex items-center space-x-2">
-									<Heart className="w-5 h-5" />
-									<span>Favorite</span>
-								</button>
-							</div>
-						</div>
-					</div>
+					<BookCard book={book} />
 					{/* Summary */}
 					{book.summary && (
 						<div className="w-full mx-auto mt-6 md:max-w-screen-lg bg-base-100 p-6 rounded-lg text-left">

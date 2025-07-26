@@ -1,3 +1,66 @@
+export const users = [
+	{
+		userId: 1,
+		name: 'Alice Johnson',
+		photoURL: 'https://randomuser.me/api/portraits/women/1.jpg',
+		isPremium: true,
+		location: 'New York, USA',
+		reviews: ['Excellent borrower, very punctual!', 'Handled books with great care.', 'Friendly and reliable user.'],
+		starRating: 4.8,
+		totalReviews: 45,
+	},
+	{
+		userId: 2,
+		name: 'Bob Smith',
+		photoURL: 'https://randomuser.me/api/portraits/men/2.jpg',
+		isPremium: false,
+		location: 'London, UK',
+		reviews: ['Good communication throughout.', 'Friendly and trustworthy user.', 'Returned books in perfect condition.'],
+		starRating: 4.3,
+		totalReviews: 32,
+	},
+	{
+		userId: 3,
+		name: 'Clara Green',
+		photoURL: 'https://randomuser.me/api/portraits/women/3.jpg',
+		isPremium: true,
+		location: 'Toronto, Canada',
+		reviews: ['Very respectful of lending terms.', 'Quick responses and easy to work with.'],
+		starRating: 4.7,
+		totalReviews: 28,
+	},
+	{
+		userId: 4,
+		name: 'Daniel West',
+		photoURL: 'https://randomuser.me/api/portraits/men/4.jpg',
+		isPremium: false,
+		location: 'Sydney, Australia',
+		reviews: ['Reliable and punctual.', 'Would lend again without hesitation.'],
+		starRating: 4.5,
+		totalReviews: 21,
+	},
+	{
+		userId: 5,
+		name: 'Emily Carter',
+		photoURL: 'https://randomuser.me/api/portraits/women/5.jpg',
+		isPremium: true,
+		location: 'Berlin, Germany',
+		reviews: ['Very responsible borrower.', 'Great communication.', 'Books returned in excellent condition.'],
+		starRating: 4.9,
+		totalReviews: 37,
+	},
+	{
+		userId: 6,
+		name: 'Frank Miller',
+		photoURL: 'https://randomuser.me/api/portraits/men/6.jpg',
+		isPremium: false,
+		location: 'Paris, France',
+		reviews: ['Friendly and easy to contact.', 'Returned books on time.'],
+		starRating: 4.1,
+		totalReviews: 19,
+	},
+];
+
 export const featuredBooks = [
 	{
 		bookId: 'gatsby001',
@@ -90,4 +153,32 @@ export const categories = [
 	{ cid: 'fiction', name: 'Fiction' },
 	{ cid: 'classic', name: 'Classic' },
 	{ cid: 'novel', name: 'Novel' },
+];
+
+export const bookRequests = [
+	{
+		id: 1,
+		userId: 1, // Alice Johnson
+		reqBook: 'gatsby001',
+		swapBookId: 'mockingbird002',
+	},
+	{
+		id: 2,
+		userId: 2, // Bob Smith
+		reqBook: 'pather005',
+		swapBookId: 'gatsby001',
+	},
+	{
+		id: 3,
+		userId: 3, // Clara Green
+		reqBook: 'mockingbird002',
+		swapBookId: '',
+		lendOnly: true,
+	},
+	{
+		id: 4,
+		userId: 4, // Daniel West
+		reqBook: '1984003',
+		swapBookId: 'atomic004',
+	},
 ];

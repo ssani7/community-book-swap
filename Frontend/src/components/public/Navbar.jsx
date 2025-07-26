@@ -18,9 +18,9 @@ const Navbar = () => {
 	return (
 		<div className="navbar bg-base-100 shadow-sm justify-between fixed z-50">
 			<div className="">
-				<a className="text-xl font-bold px-5 cursor-pointer font-sans" onClick={() => navigate('/')}>
+				<Link className="text-xl font-bold px-5 cursor-pointer font-sans" to={'/'}>
 					Boi Nagar
-				</a>
+				</Link>
 			</div>
 
 			<div className="flex gap-2">

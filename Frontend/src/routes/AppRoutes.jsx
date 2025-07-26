@@ -13,6 +13,9 @@ import HomePage from '../pages/v1/Home';
 import BookDetailsPage from '../pages/v1/BookDetails';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import MyBookRequests from '../pages/v1/MyBooks/MyBookRequests';
+import BookRequestDetail from '../pages/v1/BookRequestDetail';
+import OthersBookRequests from '../pages/v1/MyBooks/OthersBookRequests';
 
 export default function AppRoutes() {
 	const { pathname } = useLocation();
@@ -23,13 +26,6 @@ export default function AppRoutes() {
 	return (
 		<Routes>
 			<Route element={<MainLayout />}>
-				{/* Protected Routes */}
-				<Route element={<ProtectedRoute />}>
-					<Route path="/profile" element={<Profile />} />
-					<Route path="/books" element={<BookDetails />} />
-					{/* Add more protected routes here */}
-				</Route>
-
 				{/* Public Routes */}
 				<Route path="/" element={<HomePage />} />
 				<Route path="/books/:id" element={<BookDetailsPage />} />
@@ -37,11 +33,22 @@ export default function AppRoutes() {
 				<Route path="/signup" element={<SignUp />} />
 
 				{/* 404 Fallback */}
+				{/* Protected Routes */}
+				<Route element={<ProtectedRoute />}>
+					<Route path="/profile" element={<Profile />} />
+					<Route path="/books" element={<BookDetails />} />
+					<Route path="/book-request/:id" element={<BookRequestDetail />} />
+				</Route>
+
 				<Route path="*" element={<h1 className="text-center mt-10">404 - Page Not Found</h1>} />
 			</Route>
+
 			<Route element={<ManagementLayout />}>
-				<Route path="/my-books" element={<BookDetails />} />
-				<Route path="/book-requests" element={<Home />} />
+				<Route element={<ProtectedRoute />}>
+					<Route path="/my-books" element={<BookDetails />} />
+					<Route path="/book-requests" element={<OthersBookRequests />} />
+					<Route path="/my-book-requests" element={<MyBookRequests />} />
+				</Route>
 			</Route>
 		</Routes>
 	);

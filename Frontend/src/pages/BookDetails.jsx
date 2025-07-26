@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import '../styles/BookDetails.css';
 
-const BookDetails = ({ onBack }) => {
+const BookDetails = () => {
 	const books = [
 		{
 			title: 'পথের পাঁচালী',
@@ -38,10 +38,7 @@ const BookDetails = ({ onBack }) => {
 	return (
 		<div className="book-details-container">
 			<div className="header-section">
-				<h2>📚 Search New Book</h2>
-				<button className="back-btn" onClick={onBack}>
-					← Go Back
-				</button>
+				<h2>My Books</h2>
 			</div>
 
 			{/* 🔍 Search Bar */}
@@ -57,7 +54,6 @@ const BookDetails = ({ onBack }) => {
 							<th>Author</th>
 							<th>Status</th>
 							<th>Genre</th>
-							<th>Request</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -69,9 +65,6 @@ const BookDetails = ({ onBack }) => {
 									<span className={`status-badge ${book.status.toLowerCase().replace(/\s/g, '-')}`}>{book.status}</span>
 								</td>
 								<td>{book.genre}</td>
-								<td>
-									<button className="request-btn">Request</button>
-								</td>
 							</tr>
 						))}
 					</tbody>

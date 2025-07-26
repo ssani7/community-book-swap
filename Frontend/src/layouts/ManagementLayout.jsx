@@ -26,7 +26,10 @@ const ManagementLayout = () => {
 							<Link to="/my-books">My Books</Link>
 						</li>
 						<li>
-							<Link to="/book-requests">Books Request</Link>
+							<Link to="/my-book-requests">My Requests</Link>
+						</li>
+						<li>
+							<Link to="/book-requests">Others Requests</Link>
 						</li>
 					</ul>
 				</div>
