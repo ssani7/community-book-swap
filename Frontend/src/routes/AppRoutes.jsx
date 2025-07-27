@@ -3,7 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import MainLayout from '../layouts/MainLayout';
 
 import Home from '../pages/Home';
-import Profile from '../pages/Profile';
+// import Profile from '../pages/Profile';
 import ProtectedRoute from './ProtectedRoute';
 import BookDetails from '../pages/BookDetails';
 import SignUp from '../pages/v1/SignUp';
@@ -16,6 +16,7 @@ import { useLocation } from 'react-router-dom';
 import MyBookRequests from '../pages/v1/MyBooks/MyBookRequests';
 import BookRequestDetail from '../pages/v1/BookRequestDetail';
 import OthersBookRequests from '../pages/v1/MyBooks/OthersBookRequests';
+import Profile from '../pages/v1/Profile';
 
 export default function AppRoutes() {
 	const { pathname } = useLocation();

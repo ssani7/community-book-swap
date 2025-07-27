@@ -1,11 +1,8 @@
-// Shakibul Islam
-// Created on: 19/07/2025
-
 import { Link, useNavigate } from 'react-router-dom';
 import '../../styles/style.css';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
-import { auth } from '../../firebase';
+import axiosClient from '../../utils/Axios';
+import useAuth from '../../hooks/useAuth';
 
 const SignUp = () => {
 	const [name, setName] = useState('');
@@ -16,6 +13,7 @@ const SignUp = () => {
 	const [error, setError] = useState('');
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
+	const { setUserData } = useAuth();
 
 	async function handleSignUp(e) {
 		e.preventDefault();
@@ -26,18 +24,23 @@ const SignUp = () => {
 		}
 		setLoading(true);
 		try {
-			// await createUserWithEmailAndPassword(auth, email, password);
-			// navigate('/');
-			const resp = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/signup`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ email, password, phone, name }),
+			const resp = await axiosClient.post('/signup', {
+				name,
+				email,
+				phone,
+				password,
+				password_confirmation: confirmPass,
 			});
-			console.log(resp);
+
+			if (resp?.status === 201) {
+				const user = resp?.data?.user;
+				localStorage.setItem('ACCESS_TOKEN', resp.data.token);
+				setUserData(user);
+				navigate('/');
+			}
 		} catch (err) {
-			setError(err.message);
+			console.log(err);
+			setError(err?.response?.data?.message || err?.message);
 		} finally {
 			setLoading(false);
 		}

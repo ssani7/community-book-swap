@@ -12,10 +12,13 @@ return new class extends Migration {
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('firebaseId');
+            $table->string('firebaseId')->nullable();
+            $table->string('photoURL')->nullable();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('password');
             $table->string('phone')->nullable();
+            $table->boolean('isSubscriber')->default(false);
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
