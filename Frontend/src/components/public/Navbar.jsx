@@ -1,17 +1,18 @@
-import { signOut } from 'firebase/auth';
-import { auth } from '../../firebase';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import defultUser from '../../assets/images/no-user.png';
+import { clearUser } from '../../store/AuthSlice';
 
 const Navbar = () => {
 	const [open, setOpen] = useState(false);
-	const { user } = useSelector((state) => state.auth);
+	const { user, loading } = useSelector((state) => state.auth);
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	const handleLogout = async () => {
-		await signOut(auth);
+		localStorage.removeItem('ACCESS_TOKEN');
+		dispatch(clearUser());
 		navigate('/signin'); //Redirect after logout and login
 	};
 
@@ -25,30 +26,36 @@ const Navbar = () => {
 
 			<div className="flex gap-2">
 				<div className="dropdown dropdown-end" onClick={() => setOpen(!open)}>
-					{user?.uid ? (
-						<div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-							<div className="w-10 rounded-full">
-								<img alt="User avatar" src={user.photoURL || defultUser} />
-							</div>
-						</div>
+					{loading ? (
+						<div className="skeleton h-10 w-10 shrink-0 rounded-full"></div>
 					) : (
-						<Link to="/signin">
-							<div className="btn btn-primary">Log In</div>
-						</Link>
-					)}
+						<>
+							{user?.id ? (
+								<div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar border border-primary ">
+									<div className="w-10 rounded-full">
+										<img alt="User avatar" src={user.photoURL || defultUser} />
+									</div>
+								</div>
+							) : (
+								<Link to="/signin">
+									<div className="btn btn-primary">Log In</div>
+								</Link>
+							)}
 
-					{user?.uid && (
-						<ul tabIndex={0} className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-32 p-2 text-2xl shadow">
-							<li>
-								<a onClick={() => navigate('/profile')}>Profile</a>
-							</li>
-							<li>
-								<a onClick={() => navigate('/my-books')}>My Books</a>
-							</li>
-							<li>
-								<a onClick={handleLogout}>Logout</a>
-							</li>
-						</ul>
+							{user?.id && (
+								<ul tabIndex={0} className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-32 p-2 text-2xl shadow">
+									<li>
+										<a onClick={() => navigate('/profile')}>Profile</a>
+									</li>
+									<li>
+										<a onClick={() => navigate('/my-books')}>My Books</a>
+									</li>
+									<li>
+										<a onClick={handleLogout}>Logout</a>
+									</li>
+								</ul>
+							)}
+						</>
 					)}
 				</div>
 			</div>

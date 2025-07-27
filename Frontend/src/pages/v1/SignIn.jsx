@@ -1,8 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
-import '../../styles/style.css';
 import { useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../firebase';
+import axiosClient from '../../utils/Axios';
+import useAuth from '../../hooks/useAuth';
+import '../../styles/style.css';
 
 const SignIn = () => {
 	const [email, setEmail] = useState('');
@@ -10,12 +10,24 @@ const SignIn = () => {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState('');
 	const navigate = useNavigate();
+	const { setUserData } = useAuth();
 
 	const handleSignIn = async (e) => {
 		e.preventDefault();
 		setLoading(true);
 		try {
-			await signInWithEmailAndPassword(auth, email, password);
+			const resp = await axiosClient.post('/signin', {
+				email,
+				password,
+			});
+
+			if (resp?.status == 200) {
+				const user = resp?.data?.user;
+
+				localStorage.setItem('ACCESS_TOKEN', resp.data.token);
+				setUserData(user);
+			}
+
 			navigate('/');
 		} catch (err) {
 			setError(err.message);

@@ -8,5 +8,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('/api/signup', [AuthController::class, 'signup']);
 Route::apiResource('/api/books', BooksController::class);

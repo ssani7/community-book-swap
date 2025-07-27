@@ -1,26 +1,14 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import '../styles/Profile.css';
 import BookDetails from './BookDetails';
-import { getAuth } from 'firebase/auth';
-import defaultProfile from '../assets/images/no-user.png';
+import { useSelector } from 'react-redux';
+import { RiVerifiedBadgeFill } from 'react-icons/ri';
+import defultUser from '../assets/images/no-user.png';
 
 const Profile = () => {
-	const auth = getAuth();
-	const user = auth.currentUser;
+	const { user } = useSelector((state) => state.auth);
 
-	console.log(auth);
-
-	const [name] = useState(user?.displayName || 'Emran Haque');
-	const [email] = useState(user?.email || 'emran@example.com');
-	const [points] = useState(120);
-	const [profilePic] = useState();
-
-	const [editMode, setEditMode] = useState(false);
 	const [tab, setTab] = useState('books');
-
-	const [phone, setPhone] = useState(() => {
-		return localStorage.getItem('userPhone') || '+8801XXXXXXXXX';
-	});
 
 	const [showSearch, setShowSearch] = useState(false); // 👈 Toggle for BookDetails
 
@@ -47,11 +35,6 @@ const Profile = () => {
 
 	const bookRequests = books.slice(0, 2);
 
-	const handleSave = () => {
-		localStorage.setItem('userPhone', phone);
-		setEditMode(false);
-	};
-
 	// 🔁 Show BookDetails component if toggled
 	if (showSearch) {
 		return <BookDetails onBack={() => setShowSearch(false)} />;
@@ -59,32 +42,25 @@ const Profile = () => {
 
 	return (
 		<div className="profile-container">
-			<div className="profile-card-enhanced">
-				<img src={profilePic ?? defaultProfile} alt="Profile" className="profile-avatar" />
-				{!editMode ? (
-					<div className="profile-info">
-						<h2 className="profile-name">{name}</h2>
-						<p>Email: {email}</p>
-						<p>Phone: {phone}</p>
-						<p>Points: {points}</p>
-					</div>
-				) : (
-					<div className="profile-edit">
-						<label>Phone</label>
-						<input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} />
-						<div className="edit-actions">
-							<button className="save-btn" onClick={handleSave}>
-								Save
-							</button>
-							<button className="cancel-btn" onClick={() => setEditMode(false)}>
-								Cancel
-							</button>
+			<div className="bg-base-100  h-fit p-6 rounded-lg shadow-lg flex flex-col items-center text-center lg:text-left lg:col-span-3">
+				<div className="relative mb-4">
+					<img src={user?.photoURL || defultUser} alt="" className="w-32 h-32 rounded-full shadow-lg ring ring-primary  object-cover mx-auto" />
+					{user?.isPremium && (
+						<div className="absolute top-0 right-0 text-primary text-3xl">
+							<RiVerifiedBadgeFill />
 						</div>
-					</div>
-				)}
+					)}
+				</div>
+				<h2 className="text-2xl font-bold mb-1 truncate max-w-xs">{user?.name}</h2>
+				<p className="text-gray-600 mb-2 truncate max-w-xs">{user?.email}</p>
+				<p className="text-gray-600 mb-2 truncate max-w-xs">{user?.phone}</p>
+				<p className="text-gray-600 mb-2 truncate max-w-xs">{user?.location}</p>
+				<p className="text-sm text-gray-500 mb-4 truncate max-w-xs">
+					{user?.starRating || 0} returns ({user?.totalReviews || 0} swaps)
+				</p>
 			</div>
 
-			<div className="search-section">
+			<div className="search-section mt-3">
 				<button onClick={() => setShowSearch(true)} className="search-book-link">
 					🔍 Search New Book
 				</button>
