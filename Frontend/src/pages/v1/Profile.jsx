@@ -14,7 +14,7 @@ const Profile = () => {
 	const [editedUser, setEditedUser] = useState(user);
 	console.log(editedUser);
 	const [photoPreview, setPhotoPreview] = useState(user?.photoURL || defultUser);
-	const [uploading, setUploading] = useState(false);
+	const [loading, setLoading] = useState(false);
 
 	const booksOwned = [
 		{
@@ -43,13 +43,13 @@ const Profile = () => {
 		formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
 
 		try {
-			setUploading(true);
+			setLoading(true);
 			const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`, {
 				method: 'POST',
 				body: formData,
 			});
 			const data = await response.json();
-			setUploading(false);
+			setLoading(false);
 
 			if (data.secure_url) {
 				setPhotoPreview(data.secure_url);
@@ -58,7 +58,7 @@ const Profile = () => {
 				alert('Upload failed, please try again.');
 			}
 		} catch (error) {
-			setUploading(false);
+			setLoading(false);
 			alert('Error uploading image.');
 			console.error(error);
 		}
@@ -73,10 +73,16 @@ const Profile = () => {
 
 	const handleUpdate = async () => {
 		try {
+			setLoading(true);
 			const resp = await axiosClient.put(`/users/${user.id}`, editedUser);
 			console.log(resp);
+			if (resp.status == 200) {
+				window.location.reload();
+			}
 		} catch (error) {
 			console.log(error);
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -87,14 +93,14 @@ const Profile = () => {
 				<div className={`relative group cursor-pointer ${editMode ? '' : 'pointer-events-none'}`}>
 					<label className="avatar">
 						<div className="w-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 relative overflow-hidden">
-							<img src={photoPreview} alt="User" className={`${uploading ? 'opacity-50' : ''}`} />
-							{editMode && !uploading && (
+							<img src={photoPreview} alt="User" className={`${loading ? 'opacity-50' : ''}`} />
+							{editMode && !loading && (
 								<div className="absolute inset-0 bg-black bg-opacity-40 flex justify-center items-center text-white text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
 									Click to change
 								</div>
 							)}
-							{uploading && <div className="absolute inset-0 bg-black bg-opacity-40 flex justify-center items-center text-white text-xs font-semibold">Uploading...</div>}
-							<input type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" disabled={!editMode || uploading} />
+							{loading && <div className="absolute inset-0 bg-black bg-opacity-40 flex justify-center items-center text-white text-xs font-semibold">Uploading...</div>}
+							<input type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" disabled={!editMode || loading} />
 						</div>
 					</label>
 					{user?.isPremium && (
@@ -118,7 +124,7 @@ const Profile = () => {
 							<input className="input input-bordered w-full" placeholder="Email" value={editedUser.email} onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })} />
 							<input className="input input-bordered w-full" placeholder="Phone" value={editedUser.phone} onChange={(e) => setEditedUser({ ...editedUser, phone: e.target.value })} />
 							<input className="input input-bordered w-full" placeholder="Location" value={editedUser.location} onChange={(e) => setEditedUser({ ...editedUser, location: e.target.value })} />
-							<button className="btn btn-primary mt-2" disabled={uploading} onClick={handleUpdate}>
+							<button className="btn btn-primary mt-2" disabled={loading} onClick={handleUpdate}>
 								Save Changes
 							</button>
 						</div>
