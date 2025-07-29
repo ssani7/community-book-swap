@@ -7,6 +7,8 @@ import bannerImage3 from '../../assets/images/bookBanner3.jpg';
 import bannerImage4 from '../../assets/images/bookBanner4.jpg';
 import { Link } from 'react-router-dom';
 import { featuredBooks } from '../../utils/Books';
+import { useEffect, useState } from 'react';
+import axiosClient from '../../utils/Axios';
 
 const services = [
 	{ title: 'All Books', icon: <BookOpen className="w-6 h-6 text-white" /> },
@@ -25,6 +27,19 @@ const banners = [
 ];
 
 export default function HomePage() {
+	const [books, setBooks] = useState(featuredBooks);
+
+	useEffect(() => {
+		(async () => {
+			try {
+				const resp = await axiosClient.get(`${import.meta.env.VITE_API_BASE_URL}/api/books`);
+				console.log(resp);
+				setBooks((prev) => [...prev, ...resp.data]);
+			} catch (error) {
+				console.log(error);
+			}
+		})();
+	}, []);
 	return (
 		<div className="p-4 space-y-10">
 			{/* Banner Slider */}
@@ -50,7 +65,7 @@ export default function HomePage() {
 			<div>
 				<h2 className="text-2xl font-bold mb-4">Featured Books</h2>
 				<div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-6">
-					{featuredBooks.map((book, i) => (
+					{books.map((book, i) => (
 						<Link to={`/books/${book.bookId}`} key={i} className="group">
 							<div className="card bg-base-100 shadow p-4 h-full">
 								<img src={book.cover} alt={book.title} className="w-36 h-64 mx-auto object-contain rounded" />

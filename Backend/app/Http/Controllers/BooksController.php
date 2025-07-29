@@ -12,8 +12,8 @@ class BooksController extends Controller
      */
     public function index()
     {
-        $books = Books::join('users', 'books.ownerId', '=', 'users.id')
-            ->select('books.*', 'users.*')
+        $books = Books::join('users', 'books.owner_id', '=', 'users.id')
+            ->select('books.*', 'users.name as owner')
             ->get();
         return response()->json($books);
     }
@@ -23,7 +23,16 @@ class BooksController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $bookData = $request->validate([
+            'title' => 'required|string|max:255',
+            'author' => 'required|string|max:255',
+            'cover' => 'required|string|max:255',
+            'owner_id' => 'required|integer|max:255',
+        ]);
+
+        $book = Books::create($bookData);
+
+        return response()->json($book);
     }
 
     /**
