@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import '../styles/BookDetails.css';
+import { Link } from 'react-router-dom';
 
 const BookDetails = () => {
 	const books = [
@@ -40,6 +41,10 @@ const BookDetails = () => {
 			<div className="header-section">
 				<h2>My Books</h2>
 			</div>
+
+			<Link className="float-end" to="/add-book">
+				<button className="btn btn-primary">Add a Book</button>
+			</Link>
 
 			{/* 🔍 Search Bar */}
 			<div className="search-bar">

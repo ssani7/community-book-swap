@@ -17,6 +17,7 @@ import MyBookRequests from '../pages/v1/MyBooks/MyBookRequests';
 import BookRequestDetail from '../pages/v1/BookRequestDetail';
 import OthersBookRequests from '../pages/v1/MyBooks/OthersBookRequests';
 import Profile from '../pages/v1/Profile';
+import BookForm from '../pages/v1/BookForm';
 
 export default function AppRoutes() {
 	const { pathname } = useLocation();
@@ -29,15 +30,16 @@ export default function AppRoutes() {
 			<Route element={<MainLayout />}>
 				{/* Public Routes */}
 				<Route path="/" element={<HomePage />} />
-				<Route path="/books/:id" element={<BookDetailsPage />} />
 				<Route path="/signin" element={<SignIn />} />
 				<Route path="/signup" element={<SignUp />} />
+				<Route path="/books/:id" element={<BookDetailsPage />} />
 
 				{/* 404 Fallback */}
 				{/* Protected Routes */}
 				<Route element={<ProtectedRoute />}>
 					<Route path="/profile" element={<Profile />} />
 					<Route path="/books" element={<BookDetails />} />
+					<Route path="/add-book" element={<BookForm />} />
 					<Route path="/book-request/:id" element={<BookRequestDetail />} />
 				</Route>
 

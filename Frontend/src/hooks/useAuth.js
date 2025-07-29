@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { clearUser, setUser } from '../store/AuthSlice';
+import axiosClient from '../utils/Axios';
 
 const useAuth = () => {
 	const dispatch = useDispatch();
@@ -21,7 +22,7 @@ const useAuth = () => {
 		[dispatch]
 	);
 
-	const logoutUser = useCallback(() => {
+	const logoutUser = useCallback(async () => {
 		localStorage.removeItem('ACCESS_TOKEN');
 		dispatch(clearUser());
 	}, [dispatch]);

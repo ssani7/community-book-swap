@@ -1,19 +1,21 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import defultUser from '../../assets/images/no-user.png';
-import { clearUser } from '../../store/AuthSlice';
+import useAuth from '../../hooks/useAuth';
+import axiosClient from '../../utils/Axios';
 
 const Navbar = () => {
 	const [open, setOpen] = useState(false);
 	const { user, loading } = useSelector((state) => state.auth);
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
+	const { logoutUser } = useAuth();
 
 	const handleLogout = async () => {
-		localStorage.removeItem('ACCESS_TOKEN');
-		dispatch(clearUser());
-		navigate('/signin'); //Redirect after logout and login
+		const resp = await axiosClient.post('/signout');
+		console.log(resp);
+		logoutUser();
+		navigate('/signin');
 	};
 
 	return (
