@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\BookResource;
 use App\Models\Books;
 use Illuminate\Http\Request;
+use function Laravel\Prompts\select;
 
 class BooksController extends Controller
 {
@@ -27,6 +29,10 @@ class BooksController extends Controller
             'title' => 'required|string|max:255',
             'author' => 'required|string|max:255',
             'cover' => 'required|string|max:255',
+            'publisher' => 'nullable|string|max:255',
+            'publish_year' => 'nullable|integer|max:255',
+            'edition' => 'nullable|string|max:255',
+            'created_at' => 'nullable|date',
             'owner_id' => 'required|integer|max:255',
         ]);
 
@@ -40,7 +46,10 @@ class BooksController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $book = Books::with('owner')
+            ->find($id);
+
+        return new BookResource($book);
     }
 
     /**

@@ -66,7 +66,7 @@ export default function HomePage() {
 				<h2 className="text-2xl font-bold mb-4">Featured Books</h2>
 				<div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-6">
 					{books.map((book, i) => (
-						<Link to={`/books/${book.bookId}`} key={i} className="group">
+						<Link to={`/books/${book.id}`} key={i} className="group">
 							<div className="card bg-base-100 shadow p-4 h-full">
 								<img src={book.cover} alt={book.title} className="w-36 h-64 mx-auto object-contain rounded" />
 								<div className="mt-2">

@@ -12,6 +12,15 @@ class Books extends Model
         'cover',
         'publisher',
         'publish_year',
+        'edition',
+        'condition',
+        'created_at',
         'owner_id',
     ];
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
+
 }

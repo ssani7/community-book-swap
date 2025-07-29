@@ -5,7 +5,7 @@ import { ArrowRightCircle, RefreshCw, Heart, Share2 } from 'lucide-react';
 const BookCard = ({ book, requestView = false }) => {
 	const { cover, title, author, publisher, publishYear, edition, condition, owner } = book;
 
-	if (!book?.bookId) return null;
+	if (!book?.id) return null;
 	return (
 		<div className="bg-base-100 rounded-lg  p-6 flex flex-col items-center sm:flex-row md:items-start h-fit">
 			<div className="flex-shrink-0">
