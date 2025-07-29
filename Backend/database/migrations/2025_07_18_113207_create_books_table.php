@@ -14,10 +14,12 @@ return new class extends Migration {
             $table->id();
             $table->string('title');
             $table->string('author');
+            $table->string('cover');
             $table->string('publisher')->nullable();
             $table->integer('publish_year')->nullable();
-            $table->date('edition')->nullable();
-            $table->foreignId('ownerId')->constrained('users');
+            $table->string('edition')->nullable();
+            $table->string('condition')->nullable();
+            $table->foreignId('owner_id')->constrained('users');
             $table->timestamps();
         });
     }

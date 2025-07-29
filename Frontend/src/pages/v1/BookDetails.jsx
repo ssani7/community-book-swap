@@ -1,11 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { featuredBooks } from '../../utils/Books';
 import { useParams, Link } from 'react-router-dom';
 import BookCard from '../../components/public/BookCard';
+import axiosClient from '../../utils/Axios';
 
 export default function BookDetailsPage() {
 	const { id } = useParams();
-	const book = featuredBooks.find((b) => b.bookId === id);
+	const initBook = featuredBooks.find((b) => b.bookId === id);
+	const [book, setBook] = useState(initBook);
+
+	useEffect(() => {
+		(async () => {
+			try {
+				const resp = await axiosClient.get(`${import.meta.env.VITE_API_BASE_URL}/api/books/${id}`);
+				console.log(resp);
+				setBook(resp?.data?.data);
+			} catch (error) {
+				console.log(error);
+			}
+		})();
+	}, [id]);
 	if (!book) return <div>Book not found</div>;
 
 	const { description } = book;

@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
+import axiosClient from '../../utils/Axios';
+import { useSelector } from 'react-redux';
 
 const BookForm = () => {
+	const { user } = useSelector((state) => state.auth);
 	const [formData, setFormData] = useState({
 		title: '',
 		author: '',
 		edition: '',
 		publishYear: '',
 		condition: 'fresh',
-		coverUrl: '',
+		cover: '',
 	});
 
 	const [uploading, setUploading] = useState(false);
@@ -41,17 +44,32 @@ const BookForm = () => {
 				body: uploadData,
 			});
 			const data = await res.json();
-			setFormData((prev) => ({ ...prev, coverUrl: data.secure_url }));
+			return data;
 		} catch (err) {
 			console.error('Upload failed', err);
+			throw new Error(err);
 		} finally {
 			setUploading(false);
 		}
 	};
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 		console.log(formData); // Submit logic here (API call etc.)
+
+		try {
+			const coverResp = await handleImageUpload();
+			console.log(coverResp);
+			const resp = await axiosClient.post(`${import.meta.env.VITE_API_BASE_URL}/api/books`, {
+				...formData,
+				cover: coverResp.secure_url,
+				owner_id: user.id,
+			});
+
+			console.log(resp);
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	return (
@@ -77,13 +95,13 @@ const BookForm = () => {
 
 					{uploading && <span className="loading loading-spinner mt-2 block"></span>}
 
-					{localPreview && !formData.coverUrl && (
+					{localPreview && !formData.cover && (
 						<button type="button" onClick={handleImageUpload} className="btn btn-outline btn-sm mt-2">
 							Upload to Cloudinary
 						</button>
 					)}
 
-					{formData.coverUrl && !uploading && <p className="text-success text-sm mt-2">Uploaded to Cloudinary!</p>}
+					{formData.cover && !uploading && <p className="text-success text-sm mt-2">Uploaded to Cloudinary!</p>}
 				</div>
 
 				{/* Title */}
