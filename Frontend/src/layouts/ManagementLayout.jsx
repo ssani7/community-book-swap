@@ -6,7 +6,7 @@ import Navbar from '../components/public/Navbar';
 
 const ManagementLayout = () => {
 	return (
-		<div data-theme="light">
+		<div>
 			<Navbar />
 			<div className="drawer lg:drawer-open">
 				<input id="my-drawer-2" type="checkbox" className="drawer-toggle" />

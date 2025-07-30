@@ -51,7 +51,7 @@ const SignUp = () => {
 					<img src={signUpImage} alt="" className="object-cover h-full" />
 				</div>
 
-				<div className="right w-1/2">
+				<div className="right lg:w-1/2 w-full">
 					<h2 className="text-center lg:text-left">Create Your Account 📘</h2>
 					<p className="text-center lg:text-left">Join Boi Nagar to explore and buy your favorite books!</p>
 
@@ -164,7 +164,7 @@ const SignUp = () => {
 						{/* Submit */}
 						<div className="text-center mt-5">
 							<button className="btn btn-primary w-full" disabled={loading} type="submit">
-								{loading && <span className="loading loading-spinner"></span>}
+								{loading && <span className="loading loading-dots"></span>}
 								Sign Up
 							</button>
 						</div>

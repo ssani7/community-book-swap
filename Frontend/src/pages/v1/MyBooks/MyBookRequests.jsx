@@ -5,8 +5,8 @@ import { featuredBooks, bookRequests, users } from '../../../utils/Books';
 
 const MyBookRequests = () => {
 	const getBookNameById = (id) => {
-		const book = featuredBooks.find((b) => b.bookId === id);
-		return book ? book.title : 'Unknown Book';
+		const book = featuredBooks.find((b) => b?.bookId === id);
+		return book ? book?.title : 'Unknown Book';
 	};
 
 	return (
@@ -34,7 +34,7 @@ const MyBookRequests = () => {
 							</div>
 
 							<div className="flex-1 w-full text-center">
-								<h2 className="text-lg font-semibold break-words">{reqBook.title}</h2>
+								<h2 className="text-lg font-semibold break-words">{reqBook?.title}</h2>
 								<p className="text-sm text-gray-600 break-words">
 									Wants to swap with: <span className="font-medium">{getBookNameById(request.swapBookId)}</span>
 								</p>

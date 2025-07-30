@@ -46,7 +46,7 @@ const SignIn = () => {
 				<div class="w-1/2  hidden lg:block">
 					<img src={signUpImage} alt="" className="object-cover h-full" />
 				</div>
-				<div class="right w-1/2">
+				<div class="right w-full lg:w-1/2">
 					<h2>Welcome to Boi Nagar 📚</h2>
 					<p>Login to your account</p>
 
@@ -93,7 +93,7 @@ const SignIn = () => {
 						{/* Submit */}
 						<div className="text-center mt-5">
 							<button className="btn btn-primary w-full" disabled={loading} type="submit">
-								{loading && <span className="loading loading-spinner"></span>}
+								{loading && <span className="loading loading-dots"></span>}
 								Sign In
 							</button>
 						</div>

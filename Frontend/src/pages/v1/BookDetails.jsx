@@ -3,11 +3,13 @@ import { featuredBooks } from '../../utils/Books';
 import { useParams, Link } from 'react-router-dom';
 import BookCard from '../../components/public/BookCard';
 import axiosClient from '../../utils/Axios';
+import FullScreenSpinner from '../../components/public/FullScreenSpinner';
 
 export default function BookDetailsPage() {
 	const { id } = useParams();
 	const initBook = featuredBooks.find((b) => b.bookId === id);
 	const [book, setBook] = useState(initBook);
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		(async () => {
@@ -18,9 +20,12 @@ export default function BookDetailsPage() {
 			} catch (error) {
 				console.log(error);
 			}
+			setLoading(false);
 		})();
 	}, [id]);
-	if (!book) return <div>Book not found</div>;
+
+	if (loading) return <FullScreenSpinner />;
+	else if (!book) return <div>Book not found</div>;
 
 	const { description } = book;
 

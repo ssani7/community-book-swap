@@ -34,7 +34,7 @@ const OthersBookRequests = () => {
 							</div>
 
 							<div className="flex-1 w-full text-center">
-								<h2 className="text-lg font-semibold break-words">{reqBook.title}</h2>
+								<h2 className="text-lg font-semibold break-words">{reqBook?.title}</h2>
 								<p className="text-sm text-gray-600 break-words">
 									Wants to swap with: <span className="font-medium">{getBookNameById(request.swapBookId)}</span>
 								</p>
