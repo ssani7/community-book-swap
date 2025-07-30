@@ -47,6 +47,18 @@ hr.dashed {
 	filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+.sign-up-error {
+	color: #f87171;
+	font-size: 0.875rem;
+	margin-top: 0.25rem;
+	margin-bottom: 0;
+	text-align: center;
+}
+
+.label-text {
+	font-size: 0.875rem;
+}
+
 @keyframes logo-spin {
 	from {
 		transform: rotate(0deg);

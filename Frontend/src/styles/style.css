@@ -51,26 +51,6 @@
 	font-size: 28px;
 }
 
-.right p {
-	margin-bottom: 30px;
-	/* color: #555; */
-}
-
-input {
-	width: 100%;
-	padding: 12px;
-	margin-bottom: 20px;
-	border: 1px solid #ccc;
-	border-radius: 8px;
-	transition: all 0.3s;
-}
-
-input:focus {
-	border-color: #3498db;
-	outline: none;
-	box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
-}
-
 .actions {
 	display: flex;
 	justify-content: space-between;

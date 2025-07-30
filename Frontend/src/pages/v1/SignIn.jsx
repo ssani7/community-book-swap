@@ -2,24 +2,28 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import axiosClient from '../../utils/Axios';
 import useAuth from '../../hooks/useAuth';
+import { useForm } from 'react-hook-form';
+import { Eye, EyeOff } from 'lucide-react';
+import signUpImage from '../../assets//images/book2.jpeg';
 import '../../styles/style.css';
 
 const SignIn = () => {
-	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState('');
 	const navigate = useNavigate();
 	const { setUserData } = useAuth();
+	const {
+		register,
+		handleSubmit,
+		formState: { errors: formErrors },
+	} = useForm();
 
-	const handleSignIn = async (e) => {
-		e.preventDefault();
+	const [showPassword, setShowPassword] = useState(false);
+
+	const handleSignIn = async (data) => {
 		setLoading(true);
 		try {
-			const resp = await axiosClient.post('/signin', {
-				email,
-				password,
-			});
+			const resp = await axiosClient.post('/signin', data);
 
 			if (resp?.status == 200) {
 				const user = resp?.data?.user;
@@ -30,7 +34,8 @@ const SignIn = () => {
 
 			navigate('/');
 		} catch (err) {
-			setError(err.message);
+			console.log(err);
+			setError(err?.response?.data?.message || err?.message);
 		} finally {
 			setLoading(false);
 		}
@@ -38,41 +43,63 @@ const SignIn = () => {
 	return (
 		<div>
 			<div class="container">
-				<div class="left signin-img"></div>
-				<div class="right">
+				<div class="w-1/2  hidden lg:block">
+					<img src={signUpImage} alt="" className="object-cover h-full" />
+				</div>
+				<div class="right w-1/2">
 					<h2>Welcome to Boi Nagar 📚</h2>
 					<p>Login to your account</p>
 
-					<form onSubmit={handleSignIn}>
-						<input
-							type="email"
-							placeholder="Email"
-							className="p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
-							required
-						/>
-
-						<input
-							type="password"
-							placeholder="Password"
-							className="p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-							value={password}
-							onChange={(e) => setPassword(e.target.value)}
-							required
-						/>
-						<div class="actions">
-							<a href="#">Forgot Password?</a>
+					<form onSubmit={handleSubmit(handleSignIn)} className="flex flex-col gap-4 mt-4">
+						<div>
+							<label className="label">
+								<span className="label-text">Email</span>
+							</label>
+							<input
+								type="email"
+								placeholder="Enter your email"
+								{...register('email', {
+									required: 'Email is required',
+									pattern: {
+										value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+										message: 'Invalid email format',
+									},
+								})}
+								className={`input input-bordered focus:outline-none focus:ring-2 focus:ring-blue-500 w-full ${formErrors.email ? 'ring ring-red-500' : ''}`}
+							/>
+							{formErrors.email && <p className="sign-up-error">{formErrors.email.message}</p>}
 						</div>
 
-						{error && <p className="text-error text-sm text-center">{error}</p>}
+						{/* Password */}
+						<div>
+							<label className="label">
+								<span className="label-text wrap-break-word">Password</span>
+							</label>
+							<div className="relative">
+								<input
+									type={showPassword ? 'text' : 'password'}
+									placeholder="Enter your password"
+									{...register('password', {
+										required: 'Password is required',
+									})}
+									className={`input input-bordered focus:outline-none focus:ring-2 focus:ring-blue-500 w-full pr-12 ${formErrors.password ? 'ring ring-red-500' : ''}`}
+								/>
+								<button type="button" className="absolute right-3 top-3 text-gray-500 cursor-pointer z-50" onClick={() => setShowPassword((prev) => !prev)} tabIndex={-1}>
+									{showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+								</button>
+							</div>
+						</div>
 
-						<button type="submit" disabled={loading} className="btn btn-wide btn-primary">
-							{loading && <span className="loading loading-spinner"></span>}
-							Log In
-						</button>
+						{/* Submit */}
+						<div className="text-center mt-5">
+							<button className="btn btn-primary w-full" disabled={loading} type="submit">
+								{loading && <span className="loading loading-spinner"></span>}
+								Sign In
+							</button>
+						</div>
+						{error && <p className="sign-up-error">{error}</p>}
 
-						<div class="signup flex items-center justify-center">
+						<div className="signup flex items-center justify-center">
 							New to Boi Nagar?
 							<Link to="/signup">
 								<button className="btn btn-link">Create Account</button>
