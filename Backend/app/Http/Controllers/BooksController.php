@@ -12,10 +12,14 @@ class BooksController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $ownerId = $request->query('owner_id');
         $books = Books::join('users', 'books.owner_id', '=', 'users.id')
             ->select('books.*', 'users.name as owner')
+            ->when($ownerId, function ($query, $ownerId) {
+                return $query->where('books.owner_id', $ownerId);
+            })
             ->get();
         return response()->json($books);
     }
@@ -67,4 +71,5 @@ class BooksController extends Controller
     {
         //
     }
+
 }

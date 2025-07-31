@@ -1,29 +1,30 @@
 import React, { useState } from 'react';
 import axiosClient from '../../utils/Axios';
 import { useSelector } from 'react-redux';
+import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import BookUploadSuccessModal from '../../components/BookForm/BookUploadModal';
+import FullScreenSpinner from '../../components/public/FullScreenSpinner';
+import { bookGenres } from '../../utils/Books'; // Assuming you have a genres.js file exporting an array of genres
 
 const BookForm = () => {
 	const { user } = useSelector((state) => state.auth);
-	const [formData, setFormData] = useState({
-		title: '',
-		author: '',
-		edition: '',
-		publishYear: '',
-		condition: 'fresh',
-		cover: '',
-	});
+	const {
+		register,
+		handleSubmit,
+		formState: { errors: formErrors },
+		reset,
+	} = useForm();
 
+	const [isModalOpen, setModalOpen] = useState(false);
 	const [uploading, setUploading] = useState(false);
 	const [imageFile, setImageFile] = useState();
 	const [localPreview, setLocalPreview] = useState('');
 
-	const handleChange = (e) => {
-		const { name, value } = e.target;
-		setFormData((prev) => ({ ...prev, [name]: value }));
-	};
-
 	const handlePreviewImage = async (e) => {
 		const file = e.target.files[0];
+		console.log(file);
+
 		if (!file) return;
 
 		setImageFile(file);
@@ -33,7 +34,6 @@ const BookForm = () => {
 	};
 
 	const handleImageUpload = async () => {
-		setUploading(true);
 		const uploadData = new FormData();
 		uploadData.append('file', imageFile);
 		uploadData.append('upload_preset', import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
@@ -44,45 +44,56 @@ const BookForm = () => {
 				body: uploadData,
 			});
 			const data = await res.json();
+			if (data.error) {
+				throw new Error(data.error.message);
+			}
 			return data;
 		} catch (err) {
-			console.error('Upload failed', err);
 			throw new Error(err);
+		}
+	};
+
+	const submitBook = async (data) => {
+		setUploading(true);
+
+		try {
+			const coverResp = await handleImageUpload();
+			const resp = await axiosClient.post(`${import.meta.env.VITE_API_BASE_URL}/api/books`, {
+				...data,
+				cover: coverResp.secure_url,
+				owner_id: user.id,
+			});
+			console.log(resp);
+			if (resp.status !== 200) {
+				throw new Error('Failed to upload book');
+			}
+			setModalOpen(true);
+		} catch (error) {
+			console.log(error);
+			toast.error(error?.message || error.response?.data?.message || 'Failed to upload book');
 		} finally {
 			setUploading(false);
 		}
 	};
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-		console.log(formData); // Submit logic here (API call etc.)
-
-		try {
-			const coverResp = await handleImageUpload();
-			console.log(coverResp);
-			const resp = await axiosClient.post(`${import.meta.env.VITE_API_BASE_URL}/api/books`, {
-				...formData,
-				cover: coverResp.secure_url,
-				owner_id: user.id,
-			});
-
-			console.log(resp);
-		} catch (error) {
-			console.log(error);
-		}
+	const resetForm = () => {
+		reset();
+		setImageFile(null);
+		setLocalPreview('');
 	};
 
 	return (
-		<div className="max-w-xl mx-auto p-6 bg-base-100 shadow-xl rounded-xl mt-10">
+		<div className="max-w-[90%] mx-auto p-6 bg-base-100 shadow-xl rounded-xl mt-10">
 			<h2 className="text-3xl font-bold mb-6 text-center">Upload a Book</h2>
 
-			<form onSubmit={handleSubmit} className="space-y-4">
+			<form onSubmit={handleSubmit(submitBook)} className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 				{/* Book Cover Upload */}
-				<div>
-					<label className="label font-medium">Book Cover</label>
-
+				<div className="h-full pb-4">
+					<label className="label font-medium">
+						Book Cover (Max size 10 MB) <span className="text-error">*</span>
+					</label>
 					<div
-						className="w-full h-40 border-2 border-dashed border-base-300 flex items-center justify-center rounded-lg cursor-pointer hover:border-primary transition"
+						className="w-full h-50 lg:h-full border-2 border-dashed border-base-300 flex items-center justify-center rounded-lg cursor-pointer hover:border-primary transition"
 						onClick={() => document.getElementById('coverInput').click()}>
 						{localPreview ? (
 							<img src={localPreview} alt="Preview" className="h-full object-contain rounded-lg" />
@@ -91,60 +102,105 @@ const BookForm = () => {
 						)}
 					</div>
 
-					<input type="file" accept="image/*" id="coverInput" className="hidden" onChange={handlePreviewImage} />
-
-					{uploading && <span className="loading loading-spinner mt-2 block"></span>}
-
-					{localPreview && !formData.cover && (
-						<button type="button" onClick={handleImageUpload} className="btn btn-outline btn-sm mt-2">
-							Upload to Cloudinary
-						</button>
-					)}
-
-					{formData.cover && !uploading && <p className="text-success text-sm mt-2">Uploaded to Cloudinary!</p>}
+					<input type="file" accept="image/*" id="coverInput" className="hidden" {...register('cover', { required: 'Book cover is required', onChange: (e) => handlePreviewImage(e) })} />
+					{formErrors.cover && <p className="form-error-text">{formErrors.cover.message}</p>}
 				</div>
 
-				{/* Title */}
-				<div>
-					<label className="label font-medium">Title</label>
-					<input type="text" name="title" className="input input-bordered w-full" value={formData.title} onChange={handleChange} required />
+				<div className="space-y-4">
+					{/* Title */}
+					<div>
+						<label className="label font-medium">
+							Title <span className="text-error">*</span>
+						</label>
+						<input type="text" name="title" className="input input-bordered w-full" {...register('title', { required: 'Book title is required' })} />
+						{formErrors.title && <p className="form-error-text">{formErrors.title.message}</p>}
+					</div>
+
+					{/* Author */}
+					<div>
+						<label className="label font-medium">
+							Author <span className="text-error">*</span>
+						</label>
+						<input type="text" name="author" className="input input-bordered w-full" {...register('author', { required: 'Book author is required' })} />
+						{formErrors.author && <p className="form-error-text">{formErrors.author.message}</p>}
+					</div>
+
+					{/* Publication */}
+					<div>
+						<label className="label font-medium">
+							Publication Name <span className="text-error">*</span>
+						</label>
+						<input type="text" name="publisher" className="input input-bordered w-full" {...register('publisher', { required: 'Publication is required' })} />
+						{formErrors.publisher && <p className="form-error-text">{formErrors.publisher.message}</p>}
+					</div>
 				</div>
 
-				{/* Author */}
+				{/* Genre */}
 				<div>
-					<label className="label font-medium">Author</label>
-					<input type="text" name="author" className="input input-bordered w-full" value={formData.author} onChange={handleChange} required />
+					<label className="label font-medium">Genre</label>
+					<select name="genre" className="select select-bordered w-full" {...register('genre')}>
+						{bookGenres.map((genre) => (
+							<option key={genre} value={genre}>
+								{genre}
+							</option>
+						))}
+					</select>
 				</div>
 
 				{/* Edition */}
 				<div>
 					<label className="label font-medium">Edition</label>
-					<input type="text" name="edition" className="input input-bordered w-full" value={formData.edition} onChange={handleChange} />
+					<input type="text" name="edition" className="input input-bordered w-full" {...register('edition', { required: false })} />
 				</div>
 
 				{/* Publish Year */}
 				<div>
 					<label className="label font-medium">Publish Year</label>
-					<input type="number" name="publishYear" className="input input-bordered w-full" value={formData.publishYear} onChange={handleChange} />
+					<input type="number" name="publishYear" className="input input-bordered w-full" {...register('publishYear', { pattern: { value: /^[0-9]{4}$/, message: 'Invalid year format' } })} />
+					{formErrors.publishYear && <p className="form-error-text">{formErrors.publishYear.message}</p>}
 				</div>
 
 				{/* Condition */}
 				<div>
-					<label className="label font-medium">Condition</label>
-					<select name="condition" className="select select-bordered w-full" value={formData.condition} onChange={handleChange}>
+					<label className="label font-medium">Book Condition</label>
+					<select name="condition" className="select select-bordered w-full" {...register('condition')}>
 						<option value="fresh">Fresh</option>
 						<option value="old">Old</option>
 						<option value="very old">Very Old</option>
 					</select>
 				</div>
 
+				{/* Book Description */}
+				<div>
+					<label className="label font-medium">Book Description</label>
+					<textarea name="description" className="textarea textarea-bordered w-full" {...register('description', { required: false })}></textarea>
+					{formErrors.description && <p className="form-error-text">{formErrors.description.message}</p>}
+				</div>
+
+				{/* Your Thoughts */}
+				<div>
+					<label className="label font-medium">Your Thoughts</label>
+					<textarea name="ownersThoughts" className="textarea textarea-bordered w-full" {...register('ownersThoughts', { required: false })}></textarea>
+					{formErrors.ownersThoughts && <p className="form-error-text">{formErrors.ownersThoughts.message}</p>}
+				</div>
+
 				{/* Submit Button */}
-				<div className="text-right">
-					<button type="submit" className="btn btn-primary">
-						Submit Book
+				<div className="text-right lg:col-span-2">
+					<button type="submit" className="btn btn-primary" disabled={uploading}>
+						{uploading ? (
+							<>
+								<span className="loading loading-dots"></span>Submitting Book
+							</>
+						) : (
+							'Submit Book'
+						)}
 					</button>
 				</div>
 			</form>
+			{uploading && <FullScreenSpinner />}
+
+			{/* Success Modal */}
+			<BookUploadSuccessModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} onUploadNew={resetForm} />
 		</div>
 	);
 };

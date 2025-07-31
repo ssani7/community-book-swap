@@ -56,7 +56,7 @@ export default function BookDetailsPage() {
 
 					{/* Owner's Thoughts */}
 					{book.ownersThoughts && (
-						<div className="w-full mx-auto mt-4 mb-6 md:max-w-screen-lg bg-base-100 p-6 mt-4 rounded-lg text-left">
+						<div className="w-full mx-auto mb-6 md:max-w-screen-lg bg-base-100 p-6 mt-4 rounded-lg text-left">
 							<h2 className="text-2xl font-bold mb-2">Owner’s Thoughts</h2>
 							<p className="italic text-gray-600 leading-relaxed">{book.ownersThoughts}</p>
 						</div>

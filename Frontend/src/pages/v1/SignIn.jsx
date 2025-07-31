@@ -67,7 +67,7 @@ const SignIn = () => {
 								})}
 								className={`input input-bordered focus:outline-none focus:ring-2 focus:ring-blue-500 w-full ${formErrors.email ? 'ring ring-red-500' : ''}`}
 							/>
-							{formErrors.email && <p className="sign-up-error">{formErrors.email.message}</p>}
+							{formErrors.email && <p className="form-error-text">{formErrors.email.message}</p>}
 						</div>
 
 						{/* Password */}
@@ -97,7 +97,7 @@ const SignIn = () => {
 								Sign In
 							</button>
 						</div>
-						{error && <p className="sign-up-error">{error}</p>}
+						{error && <p className="form-error-text">{error}</p>}
 
 						<div className="signup flex items-center justify-center">
 							New to Boi Nagar?

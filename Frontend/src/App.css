@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Satisfy&display=swap');
+
+.satisfy-regular {
+	font-family: 'Satisfy', cursive;
+}
+
 /* Start of #customers table styles */
 #customers {
 	font-family: Arial, Helvetica, sans-serif;
@@ -47,7 +53,7 @@ hr.dashed {
 	filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
-.sign-up-error {
+.form-error-text {
 	color: #f87171;
 	font-size: 0.875rem;
 	margin-top: 0.25rem;

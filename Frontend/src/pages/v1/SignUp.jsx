@@ -68,7 +68,7 @@ const SignUp = () => {
 								})}
 								className={`input input-bordered focus:outline-none focus:ring-2 focus:ring-blue-500 w-full ${formErrors.name ? 'ring ring-red-500' : ''}`}
 							/>
-							{formErrors.name && <p className="sign-up-error">{formErrors.name.message}</p>}
+							{formErrors.name && <p className="form-error-text">{formErrors.name.message}</p>}
 						</div>
 
 						{/* Phone Number */}
@@ -88,7 +88,7 @@ const SignUp = () => {
 								})}
 								className={`input input-bordered focus:outline-none focus:ring-2 focus:ring-blue-500 w-full ${formErrors.phone ? 'ring ring-red-500' : ''}`}
 							/>
-							{formErrors.phone && <p className="sign-up-error">{formErrors.phone.message}</p>}
+							{formErrors.phone && <p className="form-error-text">{formErrors.phone.message}</p>}
 						</div>
 
 						<div>
@@ -107,7 +107,7 @@ const SignUp = () => {
 								})}
 								className={`input input-bordered focus:outline-none focus:ring-2 focus:ring-blue-500 w-full ${formErrors.email ? 'ring ring-red-500' : ''}`}
 							/>
-							{formErrors.email && <p className="sign-up-error">{formErrors.email.message}</p>}
+							{formErrors.email && <p className="form-error-text">{formErrors.email.message}</p>}
 						</div>
 
 						{/* Password */}
@@ -136,7 +136,7 @@ const SignUp = () => {
 									{showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
 								</button>
 							</div>
-							{formErrors.password && <p className="sign-up-error">{formErrors.password.message}</p>}
+							{formErrors.password && <p className="form-error-text">{formErrors.password.message}</p>}
 						</div>
 
 						{/* Confirm Password */}
@@ -158,7 +158,7 @@ const SignUp = () => {
 									{showConfirm ? <EyeOff size={20} /> : <Eye size={20} />}
 								</button>
 							</div>
-							{formErrors.password_confirmation && <p className="sign-up-error">{formErrors.password_confirmation.message}</p>}
+							{formErrors.password_confirmation && <p className="form-error-text">{formErrors.password_confirmation.message}</p>}
 						</div>
 
 						{/* Submit */}
@@ -168,7 +168,7 @@ const SignUp = () => {
 								Sign Up
 							</button>
 						</div>
-						{error && <p className="sign-up-error">{error}</p>}
+						{error && <p className="form-error-text">{error}</p>}
 
 						<div className="signup flex items-center justify-center">
 							Already have an account?

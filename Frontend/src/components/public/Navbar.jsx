@@ -21,7 +21,7 @@ const Navbar = () => {
 	return (
 		<div className="navbar bg-base-100 shadow-sm justify-between fixed z-50">
 			<div className="">
-				<Link className="text-xl font-bold px-5 cursor-pointer font-sans" to={'/'}>
+				<Link className="px-5 cursor-pointer satisfy-regular text-2xl font-bold" to={'/'}>
 					Boi Nagar
 				</Link>
 			</div>

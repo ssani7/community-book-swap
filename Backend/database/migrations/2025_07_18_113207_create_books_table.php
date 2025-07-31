@@ -19,6 +19,9 @@ return new class extends Migration {
             $table->integer('publish_year')->nullable();
             $table->string('edition')->nullable();
             $table->string('condition')->nullable();
+            $table->string('genre')->nullable();
+            $table->string('description')->nullable();
+            $table->string('ownersThoughts')->nullable();
             $table->foreignId('owner_id')->constrained('users');
             $table->timestamps();
         });

@@ -182,3 +182,26 @@ export const bookRequests = [
 		swapBookId: 'atomic004',
 	},
 ];
+
+export const bookGenres = [
+	'Fiction',
+	'Non-Fiction',
+	'Science Fiction',
+	'Fantasy',
+	'Mystery',
+	'Romance',
+	'Thriller',
+	'Historical',
+	'Biography',
+	'Self-Help',
+	'Philosophy',
+	'Horror',
+	'Poetry',
+	'Young Adult',
+	"Children's",
+	'Graphic Novel',
+	'Travel',
+	'Science',
+	'Spirituality',
+	'Education',
+];

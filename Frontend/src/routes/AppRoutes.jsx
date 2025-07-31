@@ -2,10 +2,8 @@ import { Routes, Route } from 'react-router-dom';
 
 import MainLayout from '../layouts/MainLayout';
 
-import Home from '../pages/Home';
 // import Profile from '../pages/Profile';
 import ProtectedRoute from './ProtectedRoute';
-import BookDetails from '../pages/BookDetails';
 import SignUp from '../pages/v1/SignUp';
 import SignIn from '../pages/v1/SignIn';
 import ManagementLayout from '../layouts/ManagementLayout';
@@ -19,6 +17,7 @@ import OthersBookRequests from '../pages/v1/MyBooks/OthersBookRequests';
 import Profile from '../pages/v1/Profile';
 import BookForm from '../pages/v1/BookForm';
 import FormValidation from '../pages/TestSignUp';
+import MyBooks from '../pages/v1/MyBooks/MyBooks';
 
 export default function AppRoutes() {
 	const { pathname } = useLocation();
@@ -40,7 +39,7 @@ export default function AppRoutes() {
 				{/* Protected Routes */}
 				<Route element={<ProtectedRoute />}>
 					<Route path="/profile" element={<Profile />} />
-					<Route path="/books" element={<BookDetails />} />
+					{/* <Route path="/books" element={<BookDetails />} /> */}
 					<Route path="/add-book" element={<BookForm />} />
 					<Route path="/book-request/:id" element={<BookRequestDetail />} />
 				</Route>
@@ -50,7 +49,7 @@ export default function AppRoutes() {
 
 			<Route element={<ManagementLayout />}>
 				<Route element={<ProtectedRoute />}>
-					<Route path="/my-books" element={<BookDetails />} />
+					<Route path="/my-books" element={<MyBooks />} />
 					<Route path="/book-requests" element={<OthersBookRequests />} />
 					<Route path="/my-book-requests" element={<MyBookRequests />} />
 				</Route>
