@@ -58,11 +58,13 @@ const BookForm = () => {
 
 		try {
 			const coverResp = await handleImageUpload();
-			const resp = await axiosClient.post(`${import.meta.env.VITE_API_BASE_URL}/api/books`, {
+			const bookData = {
 				...data,
 				cover: coverResp.secure_url,
 				owner_id: user.id,
-			});
+			};
+			console.log(bookData);
+			const resp = await axiosClient.post(`${import.meta.env.VITE_API_BASE_URL}/api/books`, bookData);
 			console.log(resp);
 			if (resp.status !== 200) {
 				throw new Error('Failed to upload book');
@@ -70,7 +72,7 @@ const BookForm = () => {
 			setModalOpen(true);
 		} catch (error) {
 			console.log(error);
-			toast.error(error?.message || error.response?.data?.message || 'Failed to upload book');
+			toast.error(error.response?.data?.message || error?.message || 'Failed to upload book');
 		} finally {
 			setUploading(false);
 		}
@@ -93,7 +95,7 @@ const BookForm = () => {
 						Book Cover (Max size 10 MB) <span className="text-error">*</span>
 					</label>
 					<div
-						className="w-full h-50 lg:h-full border-2 border-dashed border-base-300 flex items-center justify-center rounded-lg cursor-pointer hover:border-primary transition"
+						className="w-full h-50 lg:h-full max-h-[30vh] border-2 border-dashed border-base-300 flex items-center justify-center rounded-lg cursor-pointer hover:border-primary transition"
 						onClick={() => document.getElementById('coverInput').click()}>
 						{localPreview ? (
 							<img src={localPreview} alt="Preview" className="h-full object-contain rounded-lg" />
@@ -156,8 +158,8 @@ const BookForm = () => {
 				{/* Publish Year */}
 				<div>
 					<label className="label font-medium">Publish Year</label>
-					<input type="number" name="publishYear" className="input input-bordered w-full" {...register('publishYear', { pattern: { value: /^[0-9]{4}$/, message: 'Invalid year format' } })} />
-					{formErrors.publishYear && <p className="form-error-text">{formErrors.publishYear.message}</p>}
+					<input type="number" name="publishYear" className="input input-bordered w-full" {...register('publish_year', { pattern: { value: /^[0-9]{4}$/, message: 'Invalid year format' } })} />
+					{formErrors.publish_year && <p className="form-error-text">{formErrors.publish_year.message}</p>}
 				</div>
 
 				{/* Condition */}
@@ -180,8 +182,8 @@ const BookForm = () => {
 				{/* Your Thoughts */}
 				<div>
 					<label className="label font-medium">Your Thoughts</label>
-					<textarea name="ownersThoughts" className="textarea textarea-bordered w-full" {...register('ownersThoughts', { required: false })}></textarea>
-					{formErrors.ownersThoughts && <p className="form-error-text">{formErrors.ownersThoughts.message}</p>}
+					<textarea name="ownersThoughts" className="textarea textarea-bordered w-full" {...register('owner_thoughts', { required: false })}></textarea>
+					{formErrors.owner_thoughts && <p className="form-error-text">{formErrors.owner_thoughts.message}</p>}
 				</div>
 
 				{/* Submit Button */}

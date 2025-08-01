@@ -8,12 +8,15 @@ class Books extends Model
 {
     protected $fillable = [
         'title',
-        'author',
         'cover',
+        'author',
+        'genre',
         'publisher',
         'publish_year',
         'edition',
         'condition',
+        'description',
+        'owner_thoughts',
         'created_at',
         'owner_id',
     ];

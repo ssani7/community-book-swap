@@ -31,10 +31,14 @@ class BooksController extends Controller
     {
         $bookData = $request->validate([
             'title' => 'required|string|max:255',
-            'author' => 'required|string|max:255',
             'cover' => 'required|string|max:255',
+            'author' => 'required|string|max:255',
+            'genre' => 'nullable|string|max:255',
+            'condition' => 'nullable|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'owner_thoughts' => 'nullable|string|max:1000',
             'publisher' => 'nullable|string|max:255',
-            'publish_year' => 'nullable|integer|max:255',
+            'publish_year' => 'nullable|integer|max:3000',
             'edition' => 'nullable|string|max:255',
             'created_at' => 'nullable|date',
             'owner_id' => 'required|integer|max:255',

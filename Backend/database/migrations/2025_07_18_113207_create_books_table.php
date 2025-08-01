@@ -21,7 +21,7 @@ return new class extends Migration {
             $table->string('condition')->nullable();
             $table->string('genre')->nullable();
             $table->string('description')->nullable();
-            $table->string('ownersThoughts')->nullable();
+            $table->string('owner_thoughts')->nullable();
             $table->foreignId('owner_id')->constrained('users');
             $table->timestamps();
         });

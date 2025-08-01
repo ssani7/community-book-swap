@@ -36,29 +36,22 @@ export default function BookDetailsPage() {
 			{/* Main layout */}
 			<div className="flex flex-col xl:flex-row gap-6 mx-auto w-fit">
 				{/* Book card */}
-				<div className="flex flex-col ">
+				<div className="flex flex-col px-5 xl:px-0">
 					<BookCard book={book} />
-					{/* Summary */}
-					{book.summary && (
-						<div className="w-full mx-auto mt-6 md:max-w-screen-lg bg-base-100 p-6 rounded-lg text-left">
-							<h2 className="text-2xl font-bold mb-2">Summary</h2>
-							<p className="text-gray-700 leading-relaxed">{book.summary}</p>
-						</div>
-					)}
 
 					{/* Description */}
 					{description && (
-						<div className="w-full mx-auto mt-4 md:max-w-screen-lg bg-base-100 p-6 border-t rounded-lg text-left">
+						<div className="w-full mx-auto mt-4 bg-base-100 p-6 rounded-lg text-left shadow-md">
 							<h2 className="text-2xl font-bold mb-2">About this book</h2>
 							<p className="text-gray-700 leading-relaxed">{description}</p>
 						</div>
 					)}
 
 					{/* Owner's Thoughts */}
-					{book.ownersThoughts && (
-						<div className="w-full mx-auto mb-6 md:max-w-screen-lg bg-base-100 p-6 mt-4 rounded-lg text-left">
+					{book?.ownerThoughts && (
+						<div className="w-full mx-auto mb-6 bg-base-100 p-6 mt-4 rounded-lg text-left shadow-md">
 							<h2 className="text-2xl font-bold mb-2">Owner’s Thoughts</h2>
-							<p className="italic text-gray-600 leading-relaxed">{book.ownersThoughts}</p>
+							<p className="italic text-gray-600 leading-relaxed">{book?.ownerThoughts}</p>
 						</div>
 					)}
 				</div>
