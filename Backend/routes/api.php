@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\BookRequestController;
 use App\Http\Controllers\BooksController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,4 +21,5 @@ Route::middleware(('auth:sanctum'))->group(function () {
     Route::post('/signout', [AuthController::class, 'signout']);
     Route::apiResource('/users', UserController::class);
     Route::apiResource('/books', BooksController::class);
+    Route::apiResource('/book-requests', BookRequestController::class);
 });
