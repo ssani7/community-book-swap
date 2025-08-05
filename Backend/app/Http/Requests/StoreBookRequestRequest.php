@@ -23,13 +23,13 @@ class StoreBookRequestRequest extends FormRequest
     {
         return [
             'requested_book_id' => 'required|integer',
-            'swap_book_id' => 'required|integer',
+            'swap_book_id' => 'nullable|integer',
             'book_owner_id' => 'required|integer',
             'requester_id' => 'required|integer',
             'is_lend' => 'nullable|boolean',
             'requester_recieved_date' => 'nullable|date',
             'owner_recieved_date' => 'nullable|date',
-            'status' => 'nullable|in:pending,rejected,accepted,swapped,cancelled',
+            'status' => 'nullable|in:pending,rejected,accepted,swapped,cancelled,returned',
         ];
     }
 }

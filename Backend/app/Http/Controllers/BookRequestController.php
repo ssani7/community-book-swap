@@ -13,17 +13,26 @@ class BookRequestController extends Controller
      */
     public function index()
     {
-        $bookRequests = BookRequest::with([
-            'bookOwner:id,name,email,photoURL',
-            'requester:id,name,email,photoURL',
+        $query = BookRequest::with([
+            'bookOwner:id,name,email,photoURL,is_verified',
+            'requester:id,name,email,photoURL,is_verified',
             'requestedBook:id,title,author,cover',
             'swapBook:id,title,author,cover',
         ])
-            ->when(request('book_owner_id'), fn($query, $bookOwnerId) => $query->where('book_owner_id', $bookOwnerId))
-            ->when(request('requester_id'), fn($query, $requesterId) => $query->where('requester_id', $requesterId))
-            ->get();
+            ->when(request('book_owner_id'), fn($q, $bookOwnerId) => $q->where('book_owner_id', $bookOwnerId))
+            ->when(request('requester_id'), fn($q, $requesterId) => $q->where('requester_id', $requesterId));
 
-        return response()->json($bookRequests);
+        $allRequests = $query->get();
+
+        $pending = $allRequests->where('status', 'pending')->values();
+        $cancelled = $allRequests->where('status', 'cancelled')->values();
+        $accepted = $allRequests->where('status', 'accepted')->values();
+
+        return response()->json([
+            'pending' => $pending,
+            'cancelled' => $cancelled,
+            'accepted' => $accepted,
+        ]);
     }
 
     /**
@@ -82,7 +91,30 @@ class BookRequestController extends Controller
      */
     public function update(UpdateBookRequestRequest $request, BookRequest $bookRequest)
     {
-        //
+        // Only update status if status query parameter is present
+        $status = request('status');
+
+        if (!$status) {
+            return response()->json(['error' => 'Status query parameter is required.'], 400);
+        }
+
+        $validStatuses = ['pending', 'rejected', 'accepted', 'swapped', 'cancelled', 'returned'];
+        if (!in_array($status, $validStatuses)) {
+            return response()->json(['error' => 'Invalid status value.'], 422);
+        }
+
+        $bookRequest->status = $status;
+        $bookRequest->save();
+
+        return response()->json([
+            'message' => 'Status updated successfully.',
+            'book_request' => $bookRequest->fresh([
+                'bookOwner:id,name,email,photoURL,is_verified',
+                'requester:id,name,email,photoURL,is_verified',
+                'requestedBook:id,title,author,cover',
+                'swapBook:id,title,author,cover',
+            ]),
+        ]);
     }
 
     /**

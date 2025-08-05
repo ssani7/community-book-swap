@@ -14,13 +14,15 @@ return new class extends Migration {
             $table->id();
             $table->timestamps();
             $table->foreignId('requested_book_id')->constrained('books');
-            $table->foreignId('swap_book_id')->constrained('books');
+            $table->foreignId('swap_book_id')->nullable()->constrained('books');
             $table->foreignId('book_owner_id')->constrained('books');
             $table->foreignId('requester_id')->constrained('books');
             $table->boolean('is_lend')->default(false);
             $table->date('requester_recieved_date')->nullable();
             $table->date('owner_recieved_date')->nullable();
-            $table->enum('status', ['pending', 'rejected', 'accepted', 'swapped', 'cancelled'])->default('pending');
+            $table->enum('status', ['pending', 'rejected', 'accepted', 'swapped', 'cancelled', 'returned'])->default('pending');
+            $table->date('return_date')->nullable();
+
         });
     }
 

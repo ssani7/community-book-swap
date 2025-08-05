@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import axiosClient from '../utils/Axios';
-import useAuth from '../hooks/useAuth';
+import axiosClient from '../../utils/Axios';
+import useAuth from '../../hooks/useAuth';
 
 const SignIn = () => {
 	const [email, setEmail] = useState('');

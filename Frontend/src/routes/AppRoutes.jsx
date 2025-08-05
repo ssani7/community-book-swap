@@ -16,8 +16,8 @@ import BookRequestDetail from '../pages/v1/BookRequestDetail';
 import OthersBookRequests from '../pages/v1/MyBooks/OthersBookRequests';
 import Profile from '../pages/v1/Profile';
 import BookForm from '../pages/v1/BookForm';
-import FormValidation from '../pages/TestSignUp';
 import MyBooks from '../pages/v1/MyBooks/MyBooks';
+import BookRequestForm from '../pages/v1/BookRequestForm';
 
 export default function AppRoutes() {
 	const { pathname } = useLocation();
@@ -27,7 +27,6 @@ export default function AppRoutes() {
 	}, [pathname]);
 	return (
 		<Routes>
-			<Route path="/test/signup" element={<FormValidation />} />
 			<Route element={<MainLayout />}>
 				{/* Public Routes */}
 				<Route path="/" element={<HomePage />} />
@@ -42,6 +41,7 @@ export default function AppRoutes() {
 					{/* <Route path="/books" element={<BookDetails />} /> */}
 					<Route path="/add-book" element={<BookForm />} />
 					<Route path="/book-request/:id" element={<BookRequestDetail />} />
+					<Route path="/request-book/:id" element={<BookRequestForm />} />
 				</Route>
 
 				<Route path="*" element={<h1 className="text-center mt-10">404 - Page Not Found</h1>} />
