@@ -27,7 +27,7 @@ const ConfirmModal = ({ isOpen, title, onSubmit, onCancel, disableCancel, handle
 						</button>
 					</div>
 				</div>
-				<label className="modal-backdrop" onClick={handleClose}></label>
+				{/* <label className="modal-backdrop" onClick={handleClose}></label> */}
 			</div>
 		</>
 	);

@@ -18,6 +18,7 @@ import Profile from '../pages/v1/Profile';
 import BookForm from '../pages/v1/BookForm';
 import MyBooks from '../pages/v1/MyBooks/MyBooks';
 import BookRequestForm from '../pages/v1/BookRequestForm';
+import AllBooks from '../pages/v1/AllBooks';
 
 export default function AppRoutes() {
 	const { pathname } = useLocation();
@@ -30,6 +31,7 @@ export default function AppRoutes() {
 			<Route element={<MainLayout />}>
 				{/* Public Routes */}
 				<Route path="/" element={<HomePage />} />
+				<Route path="/all-books" element={<AllBooks />} />
 				<Route path="/signin" element={<SignIn />} />
 				<Route path="/signup" element={<SignUp />} />
 				<Route path="/books/:id" element={<BookDetailsPage />} />

@@ -25,12 +25,12 @@ class BookRequestController extends Controller
         $allRequests = $query->get();
 
         $pending = $allRequests->where('status', 'pending')->values();
-        $cancelled = $allRequests->where('status', 'cancelled')->values();
+        $rejected = $allRequests->where('status', 'rejected')->values();
         $accepted = $allRequests->where('status', 'accepted')->values();
 
         return response()->json([
             'pending' => $pending,
-            'cancelled' => $cancelled,
+            'rejected' => $rejected,
             'accepted' => $accepted,
         ]);
     }

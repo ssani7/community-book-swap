@@ -31,7 +31,7 @@ const BookUploadSuccessModal = ({ isOpen, onClose, onUploadNew }) => {
 						</button>
 					</div>
 				</div>
-				<label className="modal-backdrop" onClick={onClose}></label>
+				<label className="modal-backdrop"></label>
 			</div>
 		</>
 	);

@@ -15,12 +15,29 @@ class BooksController extends Controller
     public function index(Request $request)
     {
         $ownerId = $request->query('owner_id');
-        $books = Books::join('users', 'books.owner_id', '=', 'users.id')
+        $perPage = $request->query('per_page');
+        $search = $request->query('search'); // Get search query
+
+        $query = Books::join('users', 'books.owner_id', '=', 'users.id')
             ->select('books.*', 'users.name as owner')
             ->when($ownerId, function ($query, $ownerId) {
                 return $query->where('books.owner_id', $ownerId);
             })
-            ->get();
+            ->when($search, function ($query, $search) {
+                return $query->where(function ($q) use ($search) {
+                    $q->where('books.title', 'like', "%$search%")
+                        ->orWhere('books.author', 'like', "%$search%");
+                });
+            });
+
+        if ($perPage) {
+            // Return paginated results
+            $books = $query->paginate((int) $perPage);
+        } else {
+            // Return all results
+            $books = $query->get();
+        }
+
         return response()->json($books);
     }
 

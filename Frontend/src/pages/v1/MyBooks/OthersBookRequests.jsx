@@ -49,32 +49,32 @@ const OthersBookRequests = () => {
 						<h2 className="text-lg text-center mb-3 font-semibold">Accpeted Requests</h2>
 						<div className="space-y-4">
 							{bookRequests?.accepted.map((request) => (
-								<OthersRequestCard key={request.id} request={request} />
+								<OthersRequestCard key={request.id} request={request} type="accepted" />
 							))}
 						</div>
 					</>
 				)}
 
 				{bookRequests?.pending?.length > 0 && (
-					<>
-						<h2 className="text-lg text-center mb-3 font-semibold">Pending Requests</h2>
-						<div className="space-y-4">
+					<div className="my-32">
+						<h2 className="text-lg text-center font-semibold divider">Pending Requests</h2>
+						<div className="space-y-4 mt-6">
 							{bookRequests?.pending.map((request) => (
 								<OthersRequestCard key={request.id} request={request} />
 							))}
 						</div>
-					</>
+					</div>
 				)}
 
-				{bookRequests?.cancelled?.length > 0 && (
-					<>
-						<h2 className="text-lg text-center mb-3 font-semibold">Cancelled Requests</h2>
-						<div className="space-y-4">
-							{bookRequests?.cancelled.map((request) => (
-								<OthersRequestCard key={request.id} request={request} />
+				{bookRequests?.rejected?.length > 0 && (
+					<div className="mt-8">
+						<h2 className="text-lg text-center mb-3 font-semibold divider">Rejected Requests</h2>
+						<div className="space-y-4 mt-6">
+							{bookRequests?.rejected.map((request) => (
+								<OthersRequestCard key={request.id} request={request} type="rejected" />
 							))}
 						</div>
-					</>
+					</div>
 				)}
 			</div>
 		</div>

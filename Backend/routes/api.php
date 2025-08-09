@@ -14,6 +14,9 @@ use App\Http\Controllers\AuthController;
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/signin', [AuthController::class, 'signin']);
 
+// Public route: only index method, no authentication
+Route::get('/get-books', [BooksController::class, 'index']);
+
 Route::middleware(('auth:sanctum'))->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
