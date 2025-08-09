@@ -23,6 +23,7 @@ return new class extends Migration {
             $table->string('description')->nullable();
             $table->string('owner_thoughts')->nullable();
             $table->foreignId('owner_id')->constrained('users');
+            $table->foreignId('swapped_from')->nullable()->constrained('users');
             $table->timestamps();
         });
     }

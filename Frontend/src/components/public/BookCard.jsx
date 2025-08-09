@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { categories } from '../../utils/Books';
 import { ArrowRightCircle, RefreshCw, Heart, Share2 } from 'lucide-react';
 import ConfirmModal from '../modals/ConfirmModal';
@@ -7,30 +7,50 @@ import FullScreenSpinner from './FullScreenSpinner';
 import axiosClient from '../../utils/Axios';
 import { useSelector } from 'react-redux';
 import SuccessModal from '../modals/SuccessModal';
+import { toast } from 'react-hot-toast';
+import LendModal from '../Books/LendModal';
 
 const BookCard = ({ book, requestView = false }) => {
 	const { user } = useSelector((state) => state.auth);
+	const location = useLocation();
 	const { cover, title, author, publisher, publishYear, edition, condition, owner } = book;
 	const [confirm, setConfirm] = useState(false);
 	const [showSuccessModal, setShowSuccessModal] = useState(false);
 	const [loading, setLoading] = useState(false);
+	const [returnDate, setReturnDate] = useState('');
+
+	console.log(returnDate);
 
 	const navigate = useNavigate();
 
+	const handleShare = async () => {
+		try {
+			await navigator.clipboard.writeText(window.location.href);
+			toast.success('Book link copied to clipboard');
+		} catch (err) {
+			alert('Failed to copy link');
+		}
+	};
+
 	const handleLendRequest = async () => {
 		// Logic to handle lend request
-		console.log('Lend request for:', title);
+
+		if (!user) {
+			navigate('/signin?redirect_url=' + encodeURIComponent(location.pathname + location.search));
+		}
 
 		try {
-			const response = await axiosClient.post(`${import.meta.env.VITE_API_BASE_URL}/api/book-requests`, {
+			const reqBody = {
 				book_owner_id: book.ownerId,
 				requested_book_id: book.id,
 				requester_id: user.id,
 				is_lend: true,
-				// swap_book_id: selectedId,
-			});
+				return_date: returnDate,
+			};
 
-			console.log(response);
+			console.log(reqBody);
+
+			const response = await axiosClient.post(`${import.meta.env.VITE_API_BASE_URL}/api/book-requests`, reqBody);
 
 			if (response.status != 200) {
 				throw new Error('Failed to submit book request');
@@ -43,6 +63,8 @@ const BookCard = ({ book, requestView = false }) => {
 		setLoading(true);
 		setConfirm(false);
 	};
+
+	const swapLink = user?.id ? `/request-book/${book.id}` : `/signin?redirect_url=${encodeURIComponent(location.pathname + location.search)}`;
 
 	if (!book?.id) return null;
 	return (
@@ -102,7 +124,7 @@ const BookCard = ({ book, requestView = false }) => {
 							)}
 
 							{!requestView && (
-								<Link to={`/request-book/${book.id}`}>
+								<Link to={swapLink}>
 									<button className="btn btn-secondary flex items-center space-x-2">
 										<RefreshCw className="w-5 h-5" />
 										<span>Swap</span>
@@ -112,7 +134,7 @@ const BookCard = ({ book, requestView = false }) => {
 						</>
 					)}
 
-					<button className="btn btn-outline flex items-center space-x-2">
+					<button className="btn btn-outline flex items-center space-x-2" onClick={handleShare}>
 						<Share2 className="w-5 h-5" />
 						<span>Share</span>
 					</button>
@@ -120,22 +142,18 @@ const BookCard = ({ book, requestView = false }) => {
 			</div>
 
 			{loading && <FullScreenSpinner />}
-			<ConfirmModal
-				isOpen={confirm}
-				title="Confirm Lend Request?"
-				onSubmit={() => handleLendRequest()}
-				onCancel={() => setConfirm(false)}
-				disableCancel={false}
-				handleClose={() => setConfirm(false)}
-				submitBtnText="Confirm"
-			/>
+
+			<LendModal isOpen={confirm} onSubmit={() => handleLendRequest()} onCancel={() => setConfirm(false)} handleClose={() => setConfirm(false)} setReturnDate={setReturnDate} />
 
 			<SuccessModal
 				isOpen={showSuccessModal}
 				title={'Request Submitted Successfully'}
 				successText={'Your book request has been submitted successfully. Keep an eye on the "My Book Requests" tab to get updated.'}
 				disableCancel={true}
-				handleClose={() => setShowSuccessModal(false)}
+				handleClose={() => {
+					setShowSuccessModal(false);
+					setLoading(false);
+				}}
 				onSubmit={() => {
 					setShowSuccessModal(false);
 					navigate('/my-book-requests');

@@ -4,9 +4,10 @@ import { GoArrowLeft } from 'react-icons/go';
 import axiosClient from '../../utils/Axios';
 import ConfirmModal from '../modals/ConfirmModal';
 import { useState } from 'react';
+import { format } from 'date-fns';
 import FullScreenSpinner from '../public/FullScreenSpinner';
 
-const OthersRequestCard = ({ request, type }) => {
+const OthersRequestCard = ({ request, type, refetch }) => {
 	const reqBook = request?.requested_book;
 	const requester = request?.requester;
 	const bookOwner = request?.book_owner;
@@ -31,28 +32,26 @@ const OthersRequestCard = ({ request, type }) => {
 			break;
 	}
 
-	console.log(request);
-
 	const updateRequest = async () => {
 		try {
 			setLoading(true);
 			setConfirm(false);
 
-			const resp = await axiosClient.patch(`/book-requests/${request.id}`, {
-				requestId: updatedRequest.id,
-				status: updatedRequest.status,
-			});
-
-			console.log(resp);
+			const resp = await axiosClient.patch(`/book-requests/${request.id}`, updatedRequest);
 
 			if (resp.status === 200) {
 				console.log('Request status updated successfully');
 			}
+
+			if (resp?.data?.book_request?.status === 'swapped') {
+				toast.success('Book swapped successfully!');
+			}
+			// window.location.reload();
+			refetch?.();
 		} catch (error) {
 			console.error('Error updating request status:', error);
 		} finally {
 			setLoading(false);
-			window.location.reload();
 		}
 	};
 
@@ -78,7 +77,19 @@ const OthersRequestCard = ({ request, type }) => {
 		setConfirm(true);
 	};
 
-	console.log(newStatus);
+	const handleRecieved = () => {
+		const updatedRequest = {
+			...request,
+			owner_recieved_date: new Date().toISOString().slice(0, 19).replace('T', ' '),
+		};
+
+		setUpdatedRequest(updatedRequest);
+		setNewStatus('book recieved for this');
+		setConfirm(true);
+	};
+
+	const formattedDate = format(new Date(request.return_date), 'dd MMM, yyyy');
+
 	return (
 		<div className={`flex flex-col sm:flex-row items-center justify-around  gap-4 p-4 bg-gradient-to-r ${cardColor} from-base-100  rounded-lg shadow-md`}>
 			<div className="flex gap-4">
@@ -101,6 +112,12 @@ const OthersRequestCard = ({ request, type }) => {
 						<div className="text-sm">
 							<p className="font-semibold mb-1">{swapBook?.title}</p>
 							<p>{swapBook?.author}</p>
+							{formattedDate && (
+								<div>
+									<p className="text-sm font-semibold">Retrun By:</p>
+									<p>{formattedDate}</p>
+								</div>
+							)}
 						</div>
 					</div>
 				</div>
@@ -134,7 +151,7 @@ const OthersRequestCard = ({ request, type }) => {
 			</div>
 
 			<div className="flex gap-2 mt-2 sm:mt-0">
-				{request.status === 'pending' && (
+				{request?.status === 'pending' && (
 					<div className="flex flex-col gap-2">
 						<button className="btn btn-sm btn-primary" onClick={handleAccept}>
 							Accept
@@ -142,6 +159,21 @@ const OthersRequestCard = ({ request, type }) => {
 						<button className="btn btn-sm btn-error" onClick={handleReject}>
 							Reject
 						</button>
+					</div>
+				)}
+				{request?.status === 'accepted' && !request?.owner_recieved_date && !request.is_lend && (
+					<div className="flex flex-col gap-2">
+						<button className="btn btn-sm btn-primary" onClick={handleRecieved}>
+							Recieved Book
+						</button>
+					</div>
+				)}
+
+				{request?.status === 'accepted' && request?.owner_recieved_date && !request.is_lend && (
+					<div className="flex flex-col gap-2">
+						<div className="tooltip" data-tip="Waiting for requester to confirm book recieved">
+							<div className="badge badge-neutral">Waiting</div>
+						</div>
 					</div>
 				)}
 			</div>

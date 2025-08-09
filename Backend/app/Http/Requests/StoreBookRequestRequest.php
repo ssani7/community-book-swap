@@ -29,7 +29,8 @@ class StoreBookRequestRequest extends FormRequest
             'is_lend' => 'nullable|boolean',
             'requester_recieved_date' => 'nullable|date',
             'owner_recieved_date' => 'nullable|date',
-            'status' => 'nullable|in:pending,rejected,accepted,swapped,cancelled,returned',
+            'status' => 'nullable|in:pending,rejected,accepted,swapped,cancelled,returned,lended',
+            'return_date' => 'nullable|date',
         ];
     }
 }

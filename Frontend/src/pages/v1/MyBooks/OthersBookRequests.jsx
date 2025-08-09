@@ -9,19 +9,19 @@ const OthersBookRequests = () => {
 	const [bookRequests, setBookRequests] = useState([]);
 	const [loading, setLoading] = useState(true);
 
+	const fetchBookRequests = async () => {
+		try {
+			const response = await axiosClient.get(`${import.meta.env.VITE_API_BASE_URL}/api/book-requests?book_owner_id=${user.id}`); // Replace with your API endpoint
+			console.log(response);
+			setBookRequests(response.data);
+		} catch (error) {
+			console.error('Error fetching book requests:', error);
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	useEffect(() => {
-		// Simulate fetching book requests from an API or state management
-		const fetchBookRequests = async () => {
-			try {
-				const response = await axiosClient.get(`${import.meta.env.VITE_API_BASE_URL}/api/book-requests?book_owner_id=${user.id}`); // Replace with your API endpoint
-				console.log(response);
-				setBookRequests(response.data);
-			} catch (error) {
-				console.error('Error fetching book requests:', error);
-			} finally {
-				setLoading(false);
-			}
-		};
 		fetchBookRequests();
 	}, [user.id]);
 
@@ -49,7 +49,7 @@ const OthersBookRequests = () => {
 						<h2 className="text-lg text-center mb-3 font-semibold">Accpeted Requests</h2>
 						<div className="space-y-4">
 							{bookRequests?.accepted.map((request) => (
-								<OthersRequestCard key={request.id} request={request} type="accepted" />
+								<OthersRequestCard key={request.id} request={request} type="accepted" refetch={fetchBookRequests} />
 							))}
 						</div>
 					</>
@@ -60,7 +60,7 @@ const OthersBookRequests = () => {
 						<h2 className="text-lg text-center font-semibold divider">Pending Requests</h2>
 						<div className="space-y-4 mt-6">
 							{bookRequests?.pending.map((request) => (
-								<OthersRequestCard key={request.id} request={request} />
+								<OthersRequestCard key={request.id} request={request} refetch={fetchBookRequests} />
 							))}
 						</div>
 					</div>

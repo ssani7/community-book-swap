@@ -80,37 +80,6 @@ export default function HomePage() {
 				<h2 className="text-2xl font-bold mb-4 text-center">Featured Books</h2>
 				<BookList perPage={6} featured={true} />
 			</div>
-
-			{/* footer */}
-			<footer className="footer sm:footer-horizontal bg-base-200 text-base-content p-10">
-				<nav>
-					<h6 className="footer-title">Services</h6>
-					<Link to="/all-books" className="link link-hover">
-						Show All Books
-					</Link>
-					<Link to="/add-book" className="link link-hover">
-						Add Books
-					</Link>
-				</nav>
-				<nav>
-					<h6 className="footer-title">Profile</h6>
-					<Link to="/profile" className="link link-hover">
-						Show Profile
-					</Link>
-					<Link to="/profile" className="link link-hover">
-						Update Profile
-					</Link>
-				</nav>
-				<nav>
-					<h6 className="footer-title">Manage Books</h6>
-					<Link to="/my-books" className="link link-hover">
-						My Books
-					</Link>
-					<Link to="/my-book-requests" className="link link-hover">
-						My Book Requests
-					</Link>
-				</nav>
-			</footer>
 		</div>
 	);
 }

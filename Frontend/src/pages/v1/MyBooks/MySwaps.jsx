@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import BookRequestCard from '../../../components/BookForm/BookRequestCard';
 import MyRequestCard from '../../../components/BookRequest/MyRequestCard';
 
-const MyBookRequests = () => {
+const MySwaps = () => {
 	const { user } = useSelector((state) => state.auth);
 	const [bookRequests, setBookRequests] = useState([]);
 	const [loading, setLoading] = useState(true);
@@ -34,11 +34,11 @@ const MyBookRequests = () => {
 				<span className="loading loading-ring loading-lg text-primary"></span>
 			</div>
 		);
-	if (!bookRequests?.accepted?.length && !bookRequests?.pending?.length && !bookRequests?.cancelled?.length) {
+	if (!bookRequests?.lended?.length && !bookRequests?.swapped?.length) {
 		return (
 			<div className="p-6 max-w-4xl mx-auto">
-				<h2 className="text-lg text-center mb-3 font-semibold">No Book Requests Found</h2>
-				<p className="text-center">You have no book requests at the moment.</p>
+				<h2 className="text-lg text-center mb-3 font-semibold">No Swaps/Lends Found</h2>
+				<p className="text-center">You have no swaps or lends at the moment.</p>
 			</div>
 		);
 	}
@@ -47,34 +47,23 @@ const MyBookRequests = () => {
 		<div>
 			<h1 className="pl-6 pt-6 font-semibold">My Book Requests</h1>
 			<div className="px-6 max-w-4xl mx-auto">
-				{bookRequests?.accepted?.length > 0 && (
+				{bookRequests?.swapped?.length > 0 && (
 					<>
-						<h2 className="text-lg text-center mb-3 font-semibold">Accpeted Requests</h2>
+						<h2 className="text-lg text-center mb-3 font-semibold">Swaps</h2>
 						<div className="space-y-4">
-							{bookRequests?.accepted.map((request) => (
+							{bookRequests?.swapped.map((request) => (
 								<MyRequestCard key={request.id} request={request} type="accepted" refetch={fetchBookRequests} />
 							))}
 						</div>
 					</>
 				)}
 
-				{bookRequests?.pending?.length > 0 && (
+				{bookRequests?.lended?.length > 0 && (
 					<div className="my-32">
-						<h2 className="text-lg text-center font-semibold divider">Pending Requests</h2>
+						<h2 className="text-lg text-center font-semibold divider">Lends </h2>
 						<div className="space-y-4 mt-6">
-							{bookRequests?.pending.map((request) => (
-								<MyRequestCard key={request.id} request={request} refetch={fetchBookRequests} />
-							))}
-						</div>
-					</div>
-				)}
-
-				{bookRequests?.rejected?.length > 0 && (
-					<div className="mt-8">
-						<h2 className="text-lg text-center mb-3 font-semibold divider">Rejected Requests</h2>
-						<div className="space-y-4 mt-6">
-							{bookRequests?.rejected.map((request) => (
-								<MyRequestCard key={request.id} request={request} type="rejected" />
+							{bookRequests?.lended.map((request) => (
+								<MyRequestCard key={request.id} request={request} refetch={fetchBookRequests} type="rejected" />
 							))}
 						</div>
 					</div>
@@ -84,4 +73,4 @@ const MyBookRequests = () => {
 	);
 };
 
-export default MyBookRequests;
+export default MySwaps;

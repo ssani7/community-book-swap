@@ -16,6 +16,8 @@ Route::post('/signin', [AuthController::class, 'signin']);
 
 // Public route: only index method, no authentication
 Route::get('/get-books', [BooksController::class, 'index']);
+Route::get('/get-books/{id}', [BooksController::class, 'show']);
+Route::get('/get-related-books/{id}', [BooksController::class, 'related']);
 
 Route::middleware(('auth:sanctum'))->group(function () {
     Route::get('/user', function (Request $request) {

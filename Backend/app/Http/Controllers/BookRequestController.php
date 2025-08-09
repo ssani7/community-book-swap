@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\BookRequest;
 use App\Http\Requests\StoreBookRequestRequest;
 use App\Http\Requests\UpdateBookRequestRequest;
+use App\Models\Books;
+use Illuminate\Http\Request;
+
 
 class BookRequestController extends Controller
 {
@@ -27,11 +30,15 @@ class BookRequestController extends Controller
         $pending = $allRequests->where('status', 'pending')->values();
         $rejected = $allRequests->where('status', 'rejected')->values();
         $accepted = $allRequests->where('status', 'accepted')->values();
+        $lended = $allRequests->where('status', 'lended')->values();
+        $swapped = $allRequests->where('status', 'swapped')->values();
 
         return response()->json([
             'pending' => $pending,
             'rejected' => $rejected,
             'accepted' => $accepted,
+            'swapped' => $swapped,
+            'lended' => $lended
         ]);
     }
 
@@ -50,14 +57,18 @@ class BookRequestController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(BookRequest $bookRequest)
+    public function show($id)
     {
-        $bookRequest->load([
-            'bookOwner:id,name,email',
-            'requester:id,name,email',
-            'requestedBook:id,title,author',
-            'swapBook:id,title,author',
-        ]);
+        $bookRequest = BookRequest::with([
+            'bookOwner:id,name,email,photoURL,is_verified',
+            'requester:id,name,email,photoURL,is_verified',
+            'requestedBook:id,title,author,cover',
+            'swapBook:id,title,author,cover',
+        ])->find($id);
+
+        if (!$bookRequest) {
+            return response()->json(['error' => 'Book request not found.'], 404);
+        }
 
         return response()->json([
             'id' => $bookRequest->id,
@@ -75,6 +86,7 @@ class BookRequestController extends Controller
             'swap_book' => $bookRequest->swapBook,
             'created_at' => $bookRequest->created_at,
             'updated_at' => $bookRequest->updated_at,
+            'return_date' => $bookRequest->return_date,
         ]);
     }
 
@@ -89,21 +101,70 @@ class BookRequestController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBookRequestRequest $request, BookRequest $bookRequest)
+    public function update(Request $request, BookRequest $bookRequest)
     {
         // Only update status if status query parameter is present
         $status = request('status');
+        $existingBookRequest = null;
+        $request_id = $bookRequest->id;
 
-        if (!$status) {
-            return response()->json(['error' => 'Status query parameter is required.'], 400);
+        $swap = false;
+        $lended = false;
+
+        if ($status) {
+            $validStatuses = ['pending', 'rejected', 'accepted', 'swapped', 'cancelled', 'returned', 'lended'];
+            if (!in_array($status, $validStatuses)) {
+                return response()->json(['error' => 'Invalid status value.'], 422);
+            }
+            $bookRequest->status = $status;
         }
 
-        $validStatuses = ['pending', 'rejected', 'accepted', 'swapped', 'cancelled', 'returned'];
-        if (!in_array($status, $validStatuses)) {
-            return response()->json(['error' => 'Invalid status value.'], 422);
+
+        if ($request->owner_recieved_date != null || $request->requester_recieved_date != null) {
+            $existingBookRequest = BookRequest::find($request_id);
+
+
+            if ($request->owner_recieved_date != null) {
+                $bookRequest->owner_recieved_date = $request->input('owner_recieved_date');
+                $existingBookRequest->owner_recieved_date = $request->input('owner_recieved_date');
+            }
+
+            if ($request->requester_recieved_date != null) {
+                $bookRequest->requester_recieved_date = $request->input('requester_recieved_date');
+                $existingBookRequest->requester_recieved_date = $request->input('requester_recieved_date');
+
+                $lended = $existingBookRequest->is_lend;
+            }
+
+            $swap = $existingBookRequest->requester_recieved_date != null && $existingBookRequest->owner_recieved_date != null;
+
+
+
+            if ($swap) {
+                $ownersBook = Books::find($bookRequest->requested_book_id);
+                $ownersBook->owner_id = $bookRequest->requester_id;
+                $ownersBook->swapped_from = $bookRequest->book_owner_id;
+
+                $ownersBook->save();
+
+                $requesterBook = Books::find($bookRequest->swap_book_id);
+                $requesterBook->owner_id = $bookRequest->book_owner_id;
+                $ownersBook->swapped_from = $bookRequest->requester_id;
+
+                $requesterBook->save();
+
+                $bookRequest->status = 'swapped';
+
+            }
+
+            if ($lended) {
+                $bookRequest->status = 'lended';
+            }
+
+
         }
 
-        $bookRequest->status = $status;
+
         $bookRequest->save();
 
         return response()->json([

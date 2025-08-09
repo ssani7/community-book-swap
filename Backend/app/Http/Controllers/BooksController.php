@@ -41,6 +41,7 @@ class BooksController extends Controller
         return response()->json($books);
     }
 
+
     /**
      * Store a newly created resource in storage.
      */
@@ -91,6 +92,25 @@ class BooksController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function related(Request $request, string $id)
+    {
+        $perPage = $request->query('per_page');
+
+        $query = Books::join('users', 'books.owner_id', '=', 'users.id')
+            ->select('books.*', 'users.name as owner')
+            ->where('books.id', '!=', $id); // Exclude the current book
+
+        if ($perPage) {
+            // Return paginated results
+            $books = $query->paginate((int) $perPage);
+        } else {
+            // Return all results
+            $books = $query->get();
+        }
+
+        return response()->json($books);
     }
 
 }

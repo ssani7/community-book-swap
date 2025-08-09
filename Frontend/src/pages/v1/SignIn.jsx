@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import axiosClient from '../../utils/Axios';
 import useAuth from '../../hooks/useAuth';
@@ -11,6 +11,7 @@ const SignIn = () => {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState('');
 	const navigate = useNavigate();
+	const location = useLocation();
 	const { setUserData } = useAuth();
 	const {
 		register,
@@ -19,6 +20,10 @@ const SignIn = () => {
 	} = useForm();
 
 	const [showPassword, setShowPassword] = useState(false);
+
+	// Get redirect_url from query params and keep in a variable
+	const params = new URLSearchParams(location.search);
+	const redirectUrl = params.get('redirect_url');
 
 	const handleSignIn = async (data) => {
 		setLoading(true);
@@ -32,7 +37,7 @@ const SignIn = () => {
 				setUserData(user);
 			}
 
-			navigate('/');
+			navigate(redirectUrl ? decodeURIComponent(redirectUrl) : '/');
 		} catch (err) {
 			console.log(err);
 			setError(err?.response?.data?.message || err?.message);
@@ -42,11 +47,11 @@ const SignIn = () => {
 	};
 	return (
 		<div>
-			<div class="container">
-				<div class="w-1/2  hidden lg:block">
+			<div className="container">
+				<div className="w-1/2  hidden lg:block">
 					<img src={signUpImage} alt="" className="object-cover h-full" />
 				</div>
-				<div class="right w-full lg:w-1/2">
+				<div className="right w-full lg:w-1/2">
 					<h2>Welcome to Boi Nagar 📚</h2>
 					<p>Login to your account</p>
 
@@ -101,7 +106,7 @@ const SignIn = () => {
 
 						<div className="signup flex items-center justify-center">
 							New to Boi Nagar?
-							<Link to="/signup">
+							<Link to={`/signup${redirectUrl ? `?redirect_url=${encodeURIComponent(redirectUrl)}` : ''}`}>
 								<button className="btn btn-link">Create Account</button>
 							</Link>
 						</div>

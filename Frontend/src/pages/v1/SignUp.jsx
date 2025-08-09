@@ -24,6 +24,8 @@ const SignUp = () => {
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
 	const { setUserData } = useAuth();
+	const params = new URLSearchParams(location.search);
+	const redirectUrl = params.get('redirect_url');
 
 	async function handleSignUp(data) {
 		console.log(data);
@@ -34,7 +36,7 @@ const SignUp = () => {
 				const user = resp?.data?.user;
 				localStorage.setItem('ACCESS_TOKEN', resp.data.token);
 				setUserData(user);
-				navigate('/');
+				navigate(redirectUrl ? decodeURIComponent(redirectUrl) : '/');
 			}
 		} catch (err) {
 			console.log(err);

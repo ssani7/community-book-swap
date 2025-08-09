@@ -4,6 +4,7 @@ import { useParams, Link } from 'react-router-dom';
 import BookCard from '../../components/public/BookCard';
 import axiosClient from '../../utils/Axios';
 import FullScreenSpinner from '../../components/public/FullScreenSpinner';
+import RelatedBooks from '../../components/Books/RelatedBooks';
 
 export default function BookDetailsPage() {
 	const { id } = useParams();
@@ -14,7 +15,7 @@ export default function BookDetailsPage() {
 	useEffect(() => {
 		(async () => {
 			try {
-				const resp = await axiosClient.get(`${import.meta.env.VITE_API_BASE_URL}/api/books/${id}`);
+				const resp = await axiosClient.get(`${import.meta.env.VITE_API_BASE_URL}/api/get-books/${id}`);
 				console.log(resp);
 				setBook(resp?.data?.data);
 			} catch (error) {
@@ -57,22 +58,7 @@ export default function BookDetailsPage() {
 				</div>
 
 				{/* Related books */}
-				<aside className="bg-base-100 rounded-lg px-5 pt-3">
-					<h2 className="text-xl font-semibold mb-2 text-left">Related Books</h2>
-					<div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-1 gap-4">
-						{relatedBooks.map((rb, idx) => (
-							<Link key={idx} to={`/books/${rb.bookId}`}>
-								<div className="card card-compact flex xl:flex-row h-full xl:w-80 shadow hover:shadow-lg">
-									<img src={rb.cover} alt={rb.title} className="object-contain max-w-full h-40 mx-auto" />
-									<div className="card-body p-2">
-										<h3 className="font-semibold text-sm">{rb.title}</h3>
-										<p className="text-xs text-gray-500">Owner: {rb.owner}</p>
-									</div>
-								</div>
-							</Link>
-						))}
-					</div>
-				</aside>
+				<RelatedBooks bookId={book.id} />
 			</div>
 		</div>
 	);

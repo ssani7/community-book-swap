@@ -26,6 +26,9 @@ const ManagementLayout = () => {
 							<Link to="/my-books">My Books</Link>
 						</li>
 						<li>
+							<Link to="/my-swaps">My Swaps/Lends</Link>
+						</li>
+						<li>
 							<Link to="/my-book-requests">My Requests</Link>
 						</li>
 						<li>
@@ -33,6 +36,7 @@ const ManagementLayout = () => {
 						</li>
 					</ul>
 				</div>
+				{/* footer */}
 			</div>
 		</div>
 	);

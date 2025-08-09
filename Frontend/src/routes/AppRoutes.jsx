@@ -19,6 +19,7 @@ import BookForm from '../pages/v1/BookForm';
 import MyBooks from '../pages/v1/MyBooks/MyBooks';
 import BookRequestForm from '../pages/v1/BookRequestForm';
 import AllBooks from '../pages/v1/AllBooks';
+import MySwaps from '../pages/v1/MyBooks/MySwaps';
 
 export default function AppRoutes() {
 	const { pathname } = useLocation();
@@ -54,6 +55,7 @@ export default function AppRoutes() {
 					<Route path="/my-books" element={<MyBooks />} />
 					<Route path="/book-requests" element={<OthersBookRequests />} />
 					<Route path="/my-book-requests" element={<MyBookRequests />} />
+					<Route path="/my-swaps" element={<MySwaps />} />
 				</Route>
 			</Route>
 		</Routes>

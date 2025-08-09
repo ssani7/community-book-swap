@@ -16,6 +16,7 @@ class BookRequest extends Model
         'requester_recieved_date',
         'owner_recieved_date',
         'status',
+        'return_date',
     ];
 
     // Book owner relationship
