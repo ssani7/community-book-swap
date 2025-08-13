@@ -42,6 +42,30 @@ class BookRequestController extends Controller
         ]);
     }
 
+    public function my_swaps(Request $request)
+    {
+        $user_id = $request->query('user_id');
+
+        $query = BookRequest::with([
+            'bookOwner:id,name,email,photoURL,is_verified',
+            'requester:id,name,email,photoURL,is_verified',
+            'requestedBook:id,title,author,cover',
+            'swapBook:id,title,author,cover',
+        ])
+            ->where('book_owner_id', $user_id)
+            ->orWhere('requester_id', $user_id);
+
+        $allRequests = $query->get();
+
+        $lended = $allRequests->where('status', 'lended')->values();
+        $swapped = $allRequests->where('status', 'swapped')->values();
+
+        return response()->json([
+            'swapped' => $swapped,
+            'lended' => $lended
+        ]);
+    }
+
     /**
      * Store a newly created resource in storage.
      */

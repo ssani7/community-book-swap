@@ -27,4 +27,5 @@ Route::middleware(('auth:sanctum'))->group(function () {
     Route::apiResource('/users', UserController::class);
     Route::apiResource('/books', BooksController::class);
     Route::apiResource('/book-requests', BookRequestController::class);
+    Route::get('/my-swaps', [BookRequestController::class, 'my_swaps']);
 });

@@ -5,6 +5,7 @@ import axiosClient from '../../../utils/Axios';
 import { useSelector } from 'react-redux';
 import BookRequestCard from '../../../components/BookForm/BookRequestCard';
 import MyRequestCard from '../../../components/BookRequest/MyRequestCard';
+import SwapCard from '../../../components/BookRequest/SwapCard';
 
 const MySwaps = () => {
 	const { user } = useSelector((state) => state.auth);
@@ -13,7 +14,7 @@ const MySwaps = () => {
 
 	const fetchBookRequests = async () => {
 		try {
-			const response = await axiosClient.get(`${import.meta.env.VITE_API_BASE_URL}/api/book-requests?requester_id=${user.id}`); // Replace with your API endpoint
+			const response = await axiosClient.get(`${import.meta.env.VITE_API_BASE_URL}/api/my-swaps?user_id=${user.id}`); // Replace with your API endpoint
 			console.log(response);
 			setBookRequests(response.data);
 		} catch (error) {
@@ -46,13 +47,13 @@ const MySwaps = () => {
 	return (
 		<div>
 			<h1 className="pl-6 pt-6 font-semibold">My Book Requests</h1>
-			<div className="px-6 max-w-4xl mx-auto">
+			<div className="px-6 mx-auto">
 				{bookRequests?.swapped?.length > 0 && (
 					<>
 						<h2 className="text-lg text-center mb-3 font-semibold">Swaps</h2>
 						<div className="space-y-4">
 							{bookRequests?.swapped.map((request) => (
-								<MyRequestCard key={request.id} request={request} type="accepted" refetch={fetchBookRequests} />
+								<SwapCard key={request.id} request={request} type="accepted" refetch={fetchBookRequests} />
 							))}
 						</div>
 					</>
@@ -63,7 +64,7 @@ const MySwaps = () => {
 						<h2 className="text-lg text-center font-semibold divider">Lends </h2>
 						<div className="space-y-4 mt-6">
 							{bookRequests?.lended.map((request) => (
-								<MyRequestCard key={request.id} request={request} refetch={fetchBookRequests} type="rejected" />
+								<SwapCard key={request.id} request={request} refetch={fetchBookRequests} type="rejected" />
 							))}
 						</div>
 					</div>

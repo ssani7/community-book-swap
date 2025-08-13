@@ -31,7 +31,7 @@ const OthersBookRequests = () => {
 				<span className="loading loading-ring loading-lg text-primary"></span>
 			</div>
 		);
-	if (!bookRequests?.accepted?.length && !bookRequests?.pending?.length && !bookRequests?.cancelled?.length) {
+	if (!bookRequests?.accepted?.length && !bookRequests?.pending?.length && !bookRequests?.cancelled?.length && !bookRequests?.rejected?.length) {
 		return (
 			<div className="p-6 max-w-4xl mx-auto">
 				<h2 className="text-lg text-center mb-3 font-semibold">No Book Requests Found</h2>
@@ -43,20 +43,20 @@ const OthersBookRequests = () => {
 	return (
 		<div>
 			<h1 className="pl-6 pt-6 font-semibold">Requests for my books</h1>
-			<div className="px-6 max-w-4xl mx-auto">
+			<div className="px-6  mx-auto">
 				{bookRequests?.accepted?.length > 0 && (
-					<>
+					<div className="mb-32">
 						<h2 className="text-lg text-center mb-3 font-semibold">Accpeted Requests</h2>
 						<div className="space-y-4">
 							{bookRequests?.accepted.map((request) => (
 								<OthersRequestCard key={request.id} request={request} type="accepted" refetch={fetchBookRequests} />
 							))}
 						</div>
-					</>
+					</div>
 				)}
 
 				{bookRequests?.pending?.length > 0 && (
-					<div className="my-32">
+					<div className="mb-32">
 						<h2 className="text-lg text-center font-semibold divider">Pending Requests</h2>
 						<div className="space-y-4 mt-6">
 							{bookRequests?.pending.map((request) => (
@@ -67,7 +67,7 @@ const OthersBookRequests = () => {
 				)}
 
 				{bookRequests?.rejected?.length > 0 && (
-					<div className="mt-8">
+					<div className="mb-8">
 						<h2 className="text-lg text-center mb-3 font-semibold divider">Rejected Requests</h2>
 						<div className="space-y-4 mt-6">
 							{bookRequests?.rejected.map((request) => (

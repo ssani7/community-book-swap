@@ -15,7 +15,7 @@ const useAuth = () => {
 					name: user.name,
 					photoURL: user?.photoURL,
 					phone: user?.phone,
-					isPremium: user?.isPremium,
+					is_verified: user?.is_verified,
 				})
 			);
 		},

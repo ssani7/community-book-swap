@@ -84,22 +84,26 @@ const MyRequestCard = ({ request, type, refetch }) => {
 							<img src={requester?.photoURL} alt={requester?.name} />
 						</div>
 					</div>
-					{requester?.isPremium && (
-						<span className="absolute top-0 right-0  text-primary text-xl rounded-full shadow-md">
+					{requester?.is_verified ? (
+						<span className="absolute top-0 right-0 text-primary  shadow-md">
 							<RiVerifiedBadgeFill />
 						</span>
+					) : (
+						''
 					)}
 					<p className="mt-2 text-xs text-center">{requester?.name}</p>
 				</div>
 				<div className="relative flex flex-col items-center">
 					<div className="flex items-center gap-3">
-						<img src={swapBook?.cover} alt={swapBook?.title} className="object-contain h-20 shadow-sm" />
+						<img src={swapBook?.cover} alt={swapBook?.title} className="object-cover h-20 max-w-20 shadow-sm" />
 
-						{formattedDate && (
+						{request.is_lend && formattedDate ? (
 							<div>
 								<p className="text-sm font-semibold">Retrun By:</p>
 								<p>{formattedDate}</p>
 							</div>
+						) : (
+							''
 						)}
 						<div className="text-sm">
 							<p className="font-semibold mb-1">{swapBook?.title}</p>
@@ -118,7 +122,7 @@ const MyRequestCard = ({ request, type, refetch }) => {
 							<p className="font-semibold mb-1">{reqBook?.title}</p>
 							<p>{reqBook?.author}</p>
 						</div>
-						<img src={reqBook?.cover} alt={reqBook?.title} className="object-contain h-20 shadow-sm" />
+						<img src={reqBook?.cover} alt={reqBook?.title} className="object-cover h-20 max-w-20 shadow-sm" />
 					</div>
 				</div>
 				<div className="relative flex flex-col items-center  shrink-0">
@@ -127,10 +131,12 @@ const MyRequestCard = ({ request, type, refetch }) => {
 							<img src={bookOwner?.photoURL} alt={bookOwner?.name} />
 						</div>
 					</div>
-					{bookOwner?.isPremium && (
-						<span className="absolute top-0 right-0  text-primary text-xl rounded-full shadow-md">
+					{bookOwner?.is_verified ? (
+						<span className="absolute top-0 right-0 text-primary  shadow-md">
 							<RiVerifiedBadgeFill />
 						</span>
+					) : (
+						''
 					)}
 					<p className="mt-2 text-xs text-center">{bookOwner?.name}</p>
 				</div>
@@ -150,7 +156,7 @@ const MyRequestCard = ({ request, type, refetch }) => {
 					</div>
 				)}
 
-				{request?.status === 'accepted' && !request?.owner_recieved_date && !request.is_lend && (
+				{request?.status === 'accepted' && request?.requester_recieved_date && !request.is_lend && (
 					<div className="flex flex-col gap-2">
 						<div className="tooltip" data-tip="Waiting for owner to confirm book recieved">
 							<div className="badge badge-neutral">Waiting</div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignUpRequest;
+use App\Models\BookRequest;
 use App\Models\User;
 use Auth;
 use Illuminate\Http\Request;

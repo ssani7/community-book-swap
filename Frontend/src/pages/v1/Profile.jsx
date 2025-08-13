@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RiVerifiedBadgeFill } from 'react-icons/ri';
 import { FaBookOpen, FaMapMarkerAlt, FaEnvelope, FaPhoneAlt, FaEdit } from 'react-icons/fa';
 import defultUser from '../../assets/images/no-user.png';
 import axiosClient from '../../utils/Axios';
+import toast from 'react-hot-toast';
+import BookPreviewCard from '../../components/Books/BookPreviewCard';
 
 const CLOUDINARY_UPLOAD_PRESET = 'boi-nagar';
 const CLOUDINARY_CLOUD_NAME = 'ssani7';
@@ -12,30 +14,28 @@ const Profile = () => {
 	const { user } = useSelector((state) => state.auth);
 	const [editMode, setEditMode] = useState(false);
 	const [editedUser, setEditedUser] = useState(user);
-	console.log(editedUser);
 	const [photoPreview, setPhotoPreview] = useState(user?.photoURL || defultUser);
 	const [loading, setLoading] = useState(false);
 
-	const booksOwned = [
-		{
-			id: 1,
-			title: 'The Great Gatsby',
-			author: 'F. Scott Fitzgerald',
-			coverImage: 'https://covers.openlibrary.org/b/id/7222246-L.jpg',
-		},
-		{
-			id: 2,
-			title: '1984',
-			author: 'George Orwell',
-			coverImage: 'https://covers.openlibrary.org/b/id/7222241-L.jpg',
-		},
-		{
-			id: 3,
-			title: 'To Kill a Mockingbird',
-			author: 'Harper Lee',
-			coverImage: 'https://covers.openlibrary.org/b/id/8228691-L.jpg',
-		},
-	];
+	const [booksOwned, setBooksOwned] = useState([]);
+	useEffect(() => {
+		(async () => {
+			try {
+				const response = await axiosClient.get(`${import.meta.env.VITE_API_BASE_URL}/api/books/?owner_id=${user.id}`);
+				console.log(response);
+				if (response.statusText != 'OK') {
+					throw new Error('Network response was not ok');
+				}
+				console.log(response);
+				setBooksOwned((prev) => [...prev, ...response.data]);
+			} catch (error) {
+				console.error('Error fetching books:', error);
+				toast.error(error?.message);
+			}
+		})();
+	}, [user.id]);
+
+	const [selectedIds, setSelectedIds] = useState([]);
 
 	const uploadImageToCloudinary = async (file) => {
 		const formData = new FormData();
@@ -86,6 +86,8 @@ const Profile = () => {
 		}
 	};
 
+	console.log(user);
+
 	return (
 		<div className="max-w-6xl mx-auto p-6 space-y-10">
 			{/* Profile Info */}
@@ -103,7 +105,7 @@ const Profile = () => {
 							<input type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" disabled={!editMode || loading} />
 						</div>
 					</label>
-					{user?.isPremium && (
+					{user?.is_verified && (
 						<div className="absolute top-0 right-0 text-primary" title="Verified Subscriber">
 							<RiVerifiedBadgeFill size={30} />
 						</div>
@@ -123,7 +125,6 @@ const Profile = () => {
 							<input className="input input-bordered w-full" placeholder="Name" value={editedUser.name} onChange={(e) => setEditedUser({ ...editedUser, name: e.target.value })} />
 							<input className="input input-bordered w-full" placeholder="Email" value={editedUser.email} onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })} />
 							<input className="input input-bordered w-full" placeholder="Phone" value={editedUser.phone} onChange={(e) => setEditedUser({ ...editedUser, phone: e.target.value })} />
-							<input className="input input-bordered w-full" placeholder="Location" value={editedUser.location} onChange={(e) => setEditedUser({ ...editedUser, location: e.target.value })} />
 							<button className="btn btn-primary mt-2" disabled={loading} onClick={handleUpdate}>
 								Save Changes
 							</button>
@@ -135,9 +136,6 @@ const Profile = () => {
 							</div>
 							<div className="text-sm text-gray-500 flex items-center gap-2">
 								<FaPhoneAlt className="text-primary" /> {user?.phone}
-							</div>
-							<div className="text-sm text-gray-500 flex items-center gap-2">
-								<FaMapMarkerAlt className="text-primary" /> {user?.location}
 							</div>
 
 							<div className="flex flex-wrap gap-4 mt-4 justify-center sm:justify-start">
@@ -170,19 +168,7 @@ const Profile = () => {
 				<h2 className="text-xl font-bold">Books Owned</h2>
 				<div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
 					{booksOwned.map((book) => (
-						<div key={book.id} className="card bg-base-100 shadow-md hover:shadow-lg transition-shadow">
-							<figure className="h-48 overflow-hidden">
-								<img src={book.coverImage} alt={book.title} className="object-cover w-full h-full" />
-							</figure>
-							<div className="card-body p-4">
-								<h3 className="card-title text-sm truncate" title={book.title}>
-									{book.title}
-								</h3>
-								<p className="text-xs text-gray-500 truncate" title={book.author}>
-									{book.author}
-								</p>
-							</div>
-						</div>
+						<BookPreviewCard book={book} key={book.id} />
 					))}
 				</div>
 			</div>
