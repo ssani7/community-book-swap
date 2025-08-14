@@ -7,6 +7,7 @@ import FullScreenSpinner from '../public/FullScreenSpinner';
 import axiosClient from '../../utils/Axios';
 import { toast } from 'react-hot-toast';
 import { format } from 'date-fns';
+import { Link } from 'react-router-dom';
 
 const MyRequestCard = ({ request, type, refetch }) => {
 	const reqBook = request?.requested_book;
@@ -95,7 +96,9 @@ const MyRequestCard = ({ request, type, refetch }) => {
 				</div>
 				<div className="relative flex flex-col items-center">
 					<div className="flex items-center gap-3">
-						<img src={swapBook?.cover} alt={swapBook?.title} className="object-cover h-20 max-w-20 shadow-sm" />
+						<Link to={`/books/${swapBook?.id}`}>
+							<img src={swapBook?.cover} alt={swapBook?.title} className="object-cover h-20 max-w-20 shadow-sm" />
+						</Link>
 
 						{request.is_lend && formattedDate ? (
 							<div>
@@ -106,7 +109,9 @@ const MyRequestCard = ({ request, type, refetch }) => {
 							''
 						)}
 						<div className="text-sm">
-							<p className="font-semibold mb-1">{swapBook?.title}</p>
+							<Link to={`/books/${swapBook?.id}`}>
+								<p className="font-semibold mb-1">{swapBook?.title}</p>
+							</Link>
 							<p>{swapBook?.author}</p>
 						</div>
 					</div>
@@ -119,27 +124,33 @@ const MyRequestCard = ({ request, type, refetch }) => {
 				<div className="relative flex flex-col items-center">
 					<div className="flex items-center gap-3">
 						<div className="text-sm">
-							<p className="font-semibold mb-1">{reqBook?.title}</p>
+							<Link to={`/books/${reqBook?.id}`}>
+								<p className="font-semibold mb-1 hover:underline">{reqBook?.title}</p>
+							</Link>
 							<p>{reqBook?.author}</p>
 						</div>
-						<img src={reqBook?.cover} alt={reqBook?.title} className="object-cover h-20 max-w-20 shadow-sm" />
+						<Link to={`/books/${reqBook?.id}`}>
+							<img src={reqBook?.cover} alt={reqBook?.title} className="object-cover h-20 max-w-20 shadow-sm" />
+						</Link>
 					</div>
 				</div>
-				<div className="relative flex flex-col items-center  shrink-0">
-					<div className="avatar">
-						<div className="w-14 h-14 ring ring-primary rounded-full ">
-							<img src={bookOwner?.photoURL} alt={bookOwner?.name} />
+				<Link to={`/profile/${bookOwner?.id}`} className="group">
+					<div className="relative flex flex-col items-center  shrink-0">
+						<div className="avatar">
+							<div className="w-14 h-14 ring ring-primary rounded-full ">
+								<img src={bookOwner?.photoURL} alt={bookOwner?.name} />
+							</div>
 						</div>
+						{bookOwner?.is_verified ? (
+							<span className="absolute top-0 right-0 text-primary  shadow-md">
+								<RiVerifiedBadgeFill />
+							</span>
+						) : (
+							''
+						)}
+						<p className="mt-2 text-xs text-center group-hover:underline">{bookOwner?.name}</p>
 					</div>
-					{bookOwner?.is_verified ? (
-						<span className="absolute top-0 right-0 text-primary  shadow-md">
-							<RiVerifiedBadgeFill />
-						</span>
-					) : (
-						''
-					)}
-					<p className="mt-2 text-xs text-center">{bookOwner?.name}</p>
-				</div>
+				</Link>
 			</div>
 
 			<div className="flex gap-2 mt-2 sm:mt-0">

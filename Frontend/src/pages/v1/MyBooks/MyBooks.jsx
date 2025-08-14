@@ -39,18 +39,18 @@ export default function MyBooks() {
 	};
 
 	// Delete selected books
-	const deleteSelected = () => {
-		setBooks((prev) => prev.filter((b) => !selectedIds.includes(b.id)));
-		setSelectedIds([]);
-	};
+	// const deleteSelected = () => {
+	// 	setBooks((prev) => prev.filter((b) => !selectedIds.includes(b.id)));
+	// 	setSelectedIds([]);
+	// };
 
 	return (
 		<div className="p-6">
-			<button className="btn btn-error mb-4" onClick={deleteSelected} disabled={selectedIds.length === 0}>
+			{/* <button className="btn btn-error mb-4" onClick={deleteSelected} disabled={selectedIds.length === 0}>
 				Delete Selected
-			</button>
+			</button> */}
 
-			<Link className="float-end" to="/add-book">
+			<Link className="w-full flex justify-end mb-6" to="/add-book">
 				<button className="btn btn-primary">Add a Book</button>
 			</Link>
 
@@ -59,11 +59,13 @@ export default function MyBooks() {
 					{/* head */}
 					<thead>
 						<tr>
+							{/*
 							<th>
 								<label>
 									<input type="checkbox" className="checkbox" checked={selectedIds.length === books.length && books.length > 0} onChange={toggleSelectAll} />
 								</label>
 							</th>
+							*/}
 							<th>Book</th>
 							<th>Genre</th>
 							<th>Status</th>
@@ -73,11 +75,11 @@ export default function MyBooks() {
 					<tbody>
 						{books.map((book) => (
 							<tr>
-								<th>
+								{/* <th>
 									<label>
 										<input type="checkbox" className="checkbox" checked={selectedIds.includes(book.id)} onChange={() => toggleSelect(book.id)} />
 									</label>
-								</th>
+								</th> */}
 								<td>
 									<div className="flex items-center gap-3">
 										<div className="avatar">

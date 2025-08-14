@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignUpRequest;
 use App\Models\BookRequest;
+use App\Models\Books;
 use App\Models\User;
 use Auth;
 use Illuminate\Http\Request;
@@ -71,6 +72,19 @@ class AuthController extends Controller
         $user = $request->user();
         $user->currentAccessToken()->delete();
         return response('', 200);
+
+    }
+
+    public function user_profile($id)
+    {
+        $user = User::find($id);
+
+        $books_owned = Books::join('users', 'books.owner_id', '=', 'users.id')
+            ->select('books.*', 'users.name as owner')
+            ->where('books.owner_id', $id)
+            ->get();
+
+        return response(compact('user', 'books_owned'), 200);
 
     }
 }

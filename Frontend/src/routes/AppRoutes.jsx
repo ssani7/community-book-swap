@@ -36,11 +36,11 @@ export default function AppRoutes() {
 				<Route path="/signin" element={<SignIn />} />
 				<Route path="/signup" element={<SignUp />} />
 				<Route path="/books/:id" element={<BookDetailsPage />} />
+				<Route path="/profile/:id" element={<Profile />} />
 
 				{/* 404 Fallback */}
 				{/* Protected Routes */}
 				<Route element={<ProtectedRoute />}>
-					<Route path="/profile" element={<Profile />} />
 					{/* <Route path="/books" element={<BookDetails />} /> */}
 					<Route path="/add-book" element={<BookForm />} />
 					<Route path="/book-request/:id" element={<BookRequestDetail />} />

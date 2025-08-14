@@ -13,7 +13,7 @@ import LendModal from '../Books/LendModal';
 const BookCard = ({ book, requestView = false }) => {
 	const { user } = useSelector((state) => state.auth);
 	const location = useLocation();
-	const { cover, title, author, publisher, publishYear, edition, condition, owner } = book;
+	const { cover, title, author, publisher, publishYear, edition, condition, owner, ownerId } = book;
 	const [confirm, setConfirm] = useState(false);
 	const [showSuccessModal, setShowSuccessModal] = useState(false);
 	const [loading, setLoading] = useState(false);
@@ -92,8 +92,11 @@ const BookCard = ({ book, requestView = false }) => {
 					<p className="text-sm mb-1">
 						<strong>Condition:</strong> {condition}
 					</p>
-					<p className="text-sm mb-1">
-						<strong>Owner:</strong> {owner}
+					<p className="flex items-center text-sm mb-1">
+						<strong>Owner:</strong>
+						<Link to={`/profile/${ownerId}`} className="m-0 p-0 pl-1 btn btn-link">
+							{owner}
+						</Link>
 					</p>
 					<div className="w-fit my-4">
 						<ul className="flex flex-wrap gap-3">

@@ -13,6 +13,7 @@ use App\Http\Controllers\AuthController;
 
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/signin', [AuthController::class, 'signin']);
+Route::get('/profile/{id}', [AuthController::class, 'user_profile']);
 
 // Public route: only index method, no authentication
 Route::get('/get-books', [BooksController::class, 'index']);

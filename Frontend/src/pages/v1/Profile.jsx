@@ -6,34 +6,39 @@ import defultUser from '../../assets/images/no-user.png';
 import axiosClient from '../../utils/Axios';
 import toast from 'react-hot-toast';
 import BookPreviewCard from '../../components/Books/BookPreviewCard';
+import { useParams } from 'react-router-dom';
 
 const CLOUDINARY_UPLOAD_PRESET = 'boi-nagar';
 const CLOUDINARY_CLOUD_NAME = 'ssani7';
 
 const Profile = () => {
-	const { user } = useSelector((state) => state.auth);
+	const { user: currentUser } = useSelector((state) => state.auth);
 	const [editMode, setEditMode] = useState(false);
+	const [user, setUser] = useState({});
 	const [editedUser, setEditedUser] = useState(user);
 	const [photoPreview, setPhotoPreview] = useState(user?.photoURL || defultUser);
 	const [loading, setLoading] = useState(false);
 
 	const [booksOwned, setBooksOwned] = useState([]);
+
+	const { id } = useParams();
+
 	useEffect(() => {
 		(async () => {
 			try {
-				const response = await axiosClient.get(`${import.meta.env.VITE_API_BASE_URL}/api/books/?owner_id=${user.id}`);
-				console.log(response);
+				const response = await axiosClient.get(`${import.meta.env.VITE_API_BASE_URL}/api/profile/${id}`);
 				if (response.statusText != 'OK') {
 					throw new Error('Network response was not ok');
 				}
 				console.log(response);
-				setBooksOwned((prev) => [...prev, ...response.data]);
+				setUser(response.data?.user);
+				setBooksOwned((prev) => [...prev, ...response.data?.books_owned]);
 			} catch (error) {
 				console.error('Error fetching books:', error);
 				toast.error(error?.message);
 			}
 		})();
-	}, [user.id]);
+	}, [id]);
 
 	const [selectedIds, setSelectedIds] = useState([]);
 
@@ -74,7 +79,7 @@ const Profile = () => {
 	const handleUpdate = async () => {
 		try {
 			setLoading(true);
-			const resp = await axiosClient.put(`/users/${user.id}`, editedUser);
+			const resp = await axiosClient.put(`/users/${user?.id}`, editedUser);
 			console.log(resp);
 			if (resp.status == 200) {
 				window.location.reload();
@@ -105,26 +110,32 @@ const Profile = () => {
 							<input type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" disabled={!editMode || loading} />
 						</div>
 					</label>
-					{user?.is_verified && (
+					{user?.is_verified ? (
 						<div className="absolute top-0 right-0 text-primary" title="Verified Subscriber">
 							<RiVerifiedBadgeFill size={30} />
 						</div>
+					) : (
+						''
 					)}
 				</div>
 
 				<div className="text-center sm:text-left space-y-3 flex-1">
 					<div className="flex justify-between items-center">
-						<h2 className="text-2xl font-bold">{user.name}</h2>
-						<button className="btn btn-sm btn-outline btn-primary" onClick={() => setEditMode((prev) => !prev)}>
-							<FaEdit /> {editMode ? 'Cancel' : 'Edit'}
-						</button>
+						<h2 className="text-2xl font-bold">{user?.name}</h2>
+						{currentUser?.id == id ? (
+							<button className="btn btn-sm btn-outline btn-primary" onClick={() => setEditMode((prev) => !prev)}>
+								<FaEdit /> {editMode ? 'Cancel' : 'Edit'}
+							</button>
+						) : (
+							''
+						)}
 					</div>
 
 					{editMode ? (
 						<div className="space-y-2">
-							<input className="input input-bordered w-full" placeholder="Name" value={editedUser.name} onChange={(e) => setEditedUser({ ...editedUser, name: e.target.value })} />
-							<input className="input input-bordered w-full" placeholder="Email" value={editedUser.email} onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })} />
-							<input className="input input-bordered w-full" placeholder="Phone" value={editedUser.phone} onChange={(e) => setEditedUser({ ...editedUser, phone: e.target.value })} />
+							<input className="input input-bordered w-full" placeholder="Name" value={editedUser?.name} onChange={(e) => setEditedUser({ ...editedUser, name: e.target.value })} />
+							<input className="input input-bordered w-full" placeholder="Email" value={editedUser?.email} onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })} />
+							<input className="input input-bordered w-full" placeholder="Phone" value={editedUser?.phone} onChange={(e) => setEditedUser({ ...editedUser, phone: e.target.value })} />
 							<button className="btn btn-primary mt-2" disabled={loading} onClick={handleUpdate}>
 								Save Changes
 							</button>
@@ -167,7 +178,7 @@ const Profile = () => {
 			<div className="space-y-4">
 				<h2 className="text-xl font-bold">Books Owned</h2>
 				<div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-					{booksOwned.map((book) => (
+					{booksOwned?.map((book) => (
 						<BookPreviewCard book={book} key={book.id} />
 					))}
 				</div>

@@ -47,7 +47,7 @@ const Navbar = () => {
 							{user?.id && (
 								<ul tabIndex={0} className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-32 p-2 text-2xl shadow">
 									<li>
-										<a onClick={() => navigate('/profile')}>Profile</a>
+										<a onClick={() => navigate(`/profile/${user.id}`)}>Profile</a>
 									</li>
 									<li>
 										<a onClick={() => navigate('/my-books')}>My Books</a>
