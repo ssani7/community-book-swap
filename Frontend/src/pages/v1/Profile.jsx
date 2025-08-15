@@ -7,6 +7,7 @@ import axiosClient from '../../utils/Axios';
 import toast from 'react-hot-toast';
 import BookPreviewCard from '../../components/Books/BookPreviewCard';
 import { useParams } from 'react-router-dom';
+import FullScreenSpinner from '../../components/public/FullScreenSpinner';
 
 const CLOUDINARY_UPLOAD_PRESET = 'boi-nagar';
 const CLOUDINARY_CLOUD_NAME = 'ssani7';
@@ -18,24 +19,46 @@ const Profile = () => {
 	const [editedUser, setEditedUser] = useState(user);
 	const [photoPreview, setPhotoPreview] = useState(user?.photoURL || defultUser);
 	const [loading, setLoading] = useState(false);
+	const [profileLoading, setProfileLoading] = useState(true);
+	const [profileNotFound, setProfileNotFound] = useState(false);
 
 	const [booksOwned, setBooksOwned] = useState([]);
 
 	const { id } = useParams();
 
 	useEffect(() => {
+		// Check if ID parameter is provided
+		if (!id) {
+			setProfileNotFound(true);
+			setProfileLoading(false);
+			return;
+		}
+
 		(async () => {
 			try {
+				setProfileLoading(true);
+				setProfileNotFound(false);
+
 				const response = await axiosClient.get(`${import.meta.env.VITE_API_BASE_URL}/api/profile/${id}`);
 				if (response.statusText != 'OK') {
 					throw new Error('Network response was not ok');
 				}
+
+				// Check if user data exists in response
+				if (!response.data?.user) {
+					setProfileNotFound(true);
+					return;
+				}
+
 				console.log(response);
 				setUser(response.data?.user);
 				setBooksOwned((prev) => [...prev, ...response.data?.books_owned]);
 			} catch (error) {
-				console.error('Error fetching books:', error);
-				toast.error(error?.message);
+				console.error('Error fetching profile:', error);
+				setProfileNotFound(true);
+				toast.error('Profile not found or error occurred');
+			} finally {
+				setProfileLoading(false);
 			}
 		})();
 	}, [id]);
@@ -91,7 +114,24 @@ const Profile = () => {
 		}
 	};
 
-	console.log(user);
+	// Show loading state
+	if (profileLoading) {
+		return <FullScreenSpinner />;
+	}
+
+	// Show not found message
+	if (profileNotFound) {
+		return (
+			<div className="max-w-6xl mx-auto p-6">
+				<div className="flex justify-center items-center min-h-[400px]">
+					<div className="text-center">
+						<h2 className="text-2xl font-bold text-gray-600 mb-4">No profile found</h2>
+						<p className="text-gray-500">The profile you're looking for doesn't exist or the ID is invalid.</p>
+					</div>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className="max-w-6xl mx-auto p-6 space-y-10">

@@ -39,7 +39,7 @@ const RelatedBooks = ({ bookId }) => {
 					: relatedBooks.map((rb, idx) => (
 							<Link key={idx} to={`/books/${rb.bookId}`}>
 								<div className="card card-compact flex xl:flex-row h-full xl:w-80 shadow hover:shadow-lg">
-									<img src={rb.cover} alt={rb.title} className="object-contain max-w-full h-40 mx-auto" />
+									<img src={rb.cover} alt={rb.title} className="object-cover max-w-[40%] h-40 mx-auto" />
 									<div className="card-body p-2">
 										<h3 className="font-semibold text-sm">{rb.title}</h3>
 										<p className="text-xs text-gray-500">Owner: {rb.owner}</p>
