@@ -120,10 +120,17 @@ const BookCard = ({ book, requestView = false }) => {
 							)}
 
 							{!requestView && (
-								<button className="btn btn-primary flex items-center space-x-2" onClick={() => setConfirm(true)}>
-									<ArrowRightCircle className="w-5 h-5" />
-									<span>Lend</span>
-								</button>
+								<div className="relative">
+									{!user?.is_verified && (
+										<div className="absolute top-0 -left-5  text-primary text-xs rounded-full shadow-md bg-primary -rotate-[20deg] px-3">
+											<div className="text-orange-400 font-extrabold">Premium</div>
+										</div>
+									)}
+									<button className="btn btn-primary flex items-center space-x-2" onClick={() => setConfirm(true)} disabled={!user?.is_verified}>
+										<ArrowRightCircle className="w-5 h-5" />
+										<span>Lend</span>
+									</button>
+								</div>
 							)}
 
 							{!requestView && (
